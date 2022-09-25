@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Docs</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="./static/build.js"></script>
+    <br>
+    Все API находится на
+    <a href="http://185.221.152.242:5480/api/">http://185.221.152.242:5480/api/</a>
+  <pre>
+
+Для работы с API необходимо получить Bearer токен. Он получается при авторизации и используется
+во всех остальных запросах:
+POST /api/user/login
+| {
+| 	 "username" : "user2",
+| 	 "password" : "u2"
+| }
+Ответ:
+{
+  "access_token": "e5c7b3c1-d1e9-4adc-992f-3108b54dffb8",
+  "user_role": "user"
+}
+Токен отправляется в заголовке, как показано ниже:
+GET /api/user/current
+Authorization: Bearer a18ffc42-6159-4da2-ba47-3bbcf4bed922
+
+Основные ендпойнты:
+POST
+/user/login
+{
+  "username" : Имя пользователя,
+  "password" : Пароль
+}
+Возвращает токен аутентификации
+
+GET
+/user/logout'
+Вылогинивает пользователя.
+
+GET
+/user/current'
+Выборка информации о текущем пользователе
+
+
+
+таблицы БД
+----------
+
+rs_sessions
+  Сессии пользователей системы
+rs_users
+  Пользователи системы
+      </PRE>
+<br>
+  <a href="http://185.221.152.242:8180/">Демонстрационная версия проекта</a><br>
+  Пользователь: user3/user3
+
+  </body>
+</html>
