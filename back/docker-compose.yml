@@ -8,11 +8,11 @@ services:
     network_mode: "host"
 #    command: python app.py --host 0.0.0.0 --port 5480 --debug
 #    command: flask run --port=5000 --host=0.0.0.0
-    command: gunicorn --bind 0.0.0.0:5480 app:app --timeout 180 --workers=4
+    command: gunicorn --bind 0.0.0.0:5500 app:app --timeout 180 --workers=4
     environment:
       - PYTHONUNBUFFERED=1
     ports:
-      - '0.0.0.0:5480:5480'
+      - '0.0.0.0:5500:5500'
     expose:
-      - '5480'
+      - '5500'
 

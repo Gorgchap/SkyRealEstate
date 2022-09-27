@@ -38,5 +38,5 @@ def after_request(response):
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5480, host='0.0.0.0')
+    app.run(debug=True, port=5500, host='0.0.0.0')
     #Не забыть поменять хост на 0.0.0.0
