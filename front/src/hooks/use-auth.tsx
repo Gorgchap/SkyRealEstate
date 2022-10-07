@@ -3,7 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { currentUser, login, logout } from '@src/api';
 import { Credentials, UserInfo } from '@src/models';
 
-const AuthContext = createContext({ user: {} as UserInfo });
+interface Context {
+  onLogin: (credentials: Credentials) => Promise<void>;
+  onLogout: () => Promise<void>;
+  user: UserInfo;
+}
+
+const AuthContext = createContext({} as Context);
 
 export const AuthProvider = ({ children }: React.PropsWithChildren): JSX.Element => {
   const navigate = useNavigate();

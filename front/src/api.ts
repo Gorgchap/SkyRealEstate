@@ -8,7 +8,7 @@ interface ApiError {
 }
 
 const api = axios.create({
-  baseURL: 'http://185.221.152.242:5480/api',
+  baseURL: 'http://185.221.152.242:5500/api',
   headers: { 'Content-Type': 'application/json' },
 });
 
