@@ -9,5 +9,8 @@ class SUser(Schema):
     email = fields.String()
     params = fields.Dict()
     role = fields.String()
+    leader = fields.Integer()
+    privateKey = fields.String()
+    publicKey = fields.String()
 
 

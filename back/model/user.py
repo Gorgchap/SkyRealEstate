@@ -23,6 +23,9 @@ class User(Base):
     params = Column(JSON)
     role = Column(String)
     comp_id = Column(Integer)
+    leader = Column(Integer)
+    privateKey = Column(String)
+    publicKey = Column(String)
 
 
     dmp = u1.SUser()
