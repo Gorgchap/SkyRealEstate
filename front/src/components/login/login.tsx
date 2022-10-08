@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Alert, Box, Button, Paper, TextField, Typography } from '@mui/material';
 import { useFormik } from 'formik';
 import { object, string } from 'yup';
@@ -6,9 +6,8 @@ import { useAuth } from '@src/hooks';
 import './login.less';
 
 export const Login = (): JSX.Element => {
-  const { onLogin } = useAuth();
-  const [errorMessage, setErrorMessage] = useState<string>('');
-  const {errors, handleBlur, handleChange, handleSubmit, isValid, touched, values} = useFormik({
+  const { error, onLogin } = useAuth();
+  const { errors, handleBlur, handleChange, handleSubmit, isValid, touched, values } = useFormik({
     initialValues: {
       username: '',
       password: '',
@@ -17,14 +16,7 @@ export const Login = (): JSX.Element => {
       username: string().required('Введите логин'),
       password: string().required('Введите пароль'),
     }),
-    onSubmit: async (credentials) => {
-      try {
-        setErrorMessage('');
-        await onLogin(credentials);
-      } catch (e) {
-        setErrorMessage(e ?? 'Произошла неизвестная ошибка');
-      }
-    }
+    onSubmit: (credentials) => onLogin(credentials),
   });
 
   return (
@@ -67,9 +59,9 @@ export const Login = (): JSX.Element => {
             Войти
           </Button>
         </Box>
-        {errorMessage && (
-          <Box sx={{ pt: 2 }}>
-            <Alert severity="error">{errorMessage}</Alert>
+        {error && (
+          <Box sx={{ minWidth: 150, pt: 2 }}>
+            <Alert severity="error">{error}</Alert>
           </Box>
         )}
       </Paper>
