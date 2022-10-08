@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }: React.PropsWithChildren): JSX.Element
     try {
       !checked && setUser(await currentUser());
     } catch (err) {
-      navigate('/main', { replace: true });
+      navigate('/dashboard', { replace: true });
     } finally {
       setChecked(true);
     }
@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }: React.PropsWithChildren): JSX.Element
   const onLogin = async (credentials: Credentials): Promise<void> => {
     await login(credentials);
     setUser(await currentUser());
-    navigate('/main', { replace: true });
+    navigate('/dashboard', { replace: true });
   };
 
   const onLogout = async (): Promise<void> => {
