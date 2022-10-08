@@ -14,4 +14,8 @@ RestApi.add_resource(proba.ProbaGet, '/proba')
 RestApi.add_resource(user.UserLogin, '/user/login')
 RestApi.add_resource(user.UserLogout, '/user/logout')
 RestApi.add_resource(user.UserCurrent, '/user/current')
+
+RestApi.add_resource(user.CreateWallet, '/user/createwallet')
+RestApi.add_resource(user.UpdateBalance, '/user/updatebalance')
+
 #get post

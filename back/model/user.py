@@ -1,5 +1,5 @@
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, TIMESTAMP, JSON
+from sqlalchemy import Column, Integer, String, TIMESTAMP, JSON, FLOAT
 from flask import session
 import uuid
 from api import db_session
@@ -9,10 +9,12 @@ from flask import current_app as ap1
 import datetime, uuid
 from hashlib import md5
 from api import IAPI
+import requests
 
 
 Base = declarative_base()
 
+baseUrl = 'https://hackathon.lsp.team/hk'
 
 class User(Base):
     __tablename__ = 'rs_users'
@@ -26,6 +28,10 @@ class User(Base):
     leader = Column(Integer)
     privateKey = Column(String)
     publicKey = Column(String)
+    maticAmount = Column(FLOAT)
+    coinsAmount = Column(FLOAT)
+    nft_id = Column(JSON)
+    score = Column(Integer)
 
 
     dmp = u1.SUser()
@@ -96,6 +102,29 @@ class User(Base):
             return user_session
         return None
 
+    def createWallet(self):
+        resp = requests.post(baseUrl+'/v1/wallets/new')
+        if resp.status_code == 201:
+            keys = resp.json()
+            self.privateKey = keys.privateKey
+            self.privateKey = keys.publicKey
+        m2 = self.userCurrObj()
+        return m2.dmp.dump(m2)
+
+    def updateBalance(self):
+        resp = requests.post(baseUrl + f'/v1/wallets/{self.publicKey}/balance')
+        if resp.status_code == 200:
+            keys = resp.json()
+            self.maticAmount = keys.maticAmount
+            self.coinsAmount = keys.rublesAmount
+
+        resp = requests.post(baseUrl + f'/v1/wallets/{self.publicKey}/nft/balance')
+        if resp.status_code == 200:
+            keys = resp.json()
+            self.nft_id = keys.balance
+
+        m2 = self.userCurrObj()
+        return m2.dmp.dump(m2)
 
     def __repr__(self):
         return "<User_Registration('%s)>" \
