@@ -9,12 +9,4 @@ class SUser(Schema):
     email = fields.String()
     params = fields.Dict()
     role = fields.String()
-    leader = fields.Integer()
-    privateKey = fields.String()
-    publicKey = fields.String()
-    maticAmount = fields.Float()
-    coinsAmount = fields.Float()
-    nft_id = fields.Dict()
-    score = fields.Integer()
-
 

@@ -30,13 +30,3 @@ class UserCurrent(Resource):
     def get(self):
         q = user.User().userCurrent()
         return make_response(jsonify(q), 201)
-
-class CreateWallet(Resource):
-    def get(self):
-        q = user.User().createWallet()
-        return make_response(jsonify(q), 201)
-
-class UpdateBalance(Resource):
-    def get(self):
-        q = user.User().updateBalance()
-        return make_response(jsonify(q), 200)
