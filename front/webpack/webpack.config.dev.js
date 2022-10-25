@@ -19,6 +19,7 @@ module.exports = {
   stats: 'errors-warnings',
   devtool: 'cheap-module-source-map',
   devServer: {
+    historyApiFallback: true,
     hot: true,
     open: true,
     port: 8180,

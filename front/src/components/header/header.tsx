@@ -4,7 +4,7 @@ import { IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import { useAuth } from '@src/hooks';
 import './header.less';
 
-const logo = require('../../../assets/images/logo.svg').default;
+const logo = require('../../../assets/images/logo-animated.svg').default;
 const menuItems = [
   {
     id: 'menu-item-logout',

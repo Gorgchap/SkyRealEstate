@@ -9,7 +9,7 @@ module.exports = [
   new ForkTsCheckerWebpackPlugin(),
   new HtmlWebpackPlugin({
     template: 'src/index.html',
-    favicon: 'assets/images/favicon.ico',
+    favicon: 'assets/images/favicon.svg',
     inject: true,
   }),
   new MiniCssExtractPlugin({

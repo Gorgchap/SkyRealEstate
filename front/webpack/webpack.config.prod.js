@@ -19,6 +19,7 @@ module.exports = {
   },
   stats: 'errors-warnings',
   devServer: {
+    historyApiFallback: true,
     host: '0.0.0.0',
     port: 8180,
   },

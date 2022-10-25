@@ -14,26 +14,25 @@ const AuthContext = createContext({} as Context);
 
 export const AuthProvider = ({ children }: React.PropsWithChildren): JSX.Element => {
   const navigate = useNavigate();
-  const [checked, setChecked] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const [user, setUser] = useState<UserInfo>({} as UserInfo);
 
   const getUser = useCallback(async () => {
     try {
-      !checked && setUser(await currentUser());
-    } catch (err) {
+      setUser(await currentUser());
       navigate('/', { replace: true });
-    } finally {
-      setChecked(true);
+    } catch (err) {
+      setUser({ email: '', id: -1, role: '', username: '' });
+      navigate('/login', { replace: true });
     }
-  }, [checked]);
+  }, []);
 
   const onLogin = async (credentials: Credentials): Promise<void> => {
     try {
       await login(credentials);
       setUser(await currentUser());
       setError('');
-      navigate('/dashboard', { replace: true });
+      navigate('/', { replace: true });
     } catch(e) {
       setError(e?.message || 'Произошла неизвестная ошибка');
     }
@@ -41,8 +40,8 @@ export const AuthProvider = ({ children }: React.PropsWithChildren): JSX.Element
 
   const onLogout = async (): Promise<void> => {
     await logout();
-    setUser({} as UserInfo);
-    navigate('/', { replace: true });
+    setUser({ email: '', id: -1, role: '', username: '' });
+    navigate('/login', { replace: true });
   };
 
   const value = useMemo(() => ({ error, onLogin, onLogout, user }), [error, user]);
