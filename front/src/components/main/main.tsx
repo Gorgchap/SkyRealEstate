@@ -1,12 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Card, CardActions, CardContent, Container, Grid, Typography } from '@mui/material';
 import { Map, YMaps } from '@pbe/react-yandex-maps';
+import { FileUploader } from '@src/components';
+
+const fileTypes = ['JPG', 'PNG', 'GIF', 'JPEG'];
 
 export const Main = (): JSX.Element => {
+  const [files, setFiles] = useState<File | null>(null);
+
   return (
     <Container sx={{ py: 8 }}>
       <Grid container spacing={4}>
-        {[0, 1, 2, 3].map((card) => (
+        {[0, 1].map((card) => (
           <Grid item key={card} sm={12} md={6}>
             <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
               <CardContent sx={{ flexGrow: 1 }}>
@@ -31,6 +36,15 @@ export const Main = (): JSX.Element => {
             </Card>
           </Grid>
         ))}
+        <Grid item container direction="column" sx={{ alignItems: 'center', textAlign: 'center' }}>
+          <FileUploader
+            handleChange={e => setFiles(e as File)}
+            name="file"
+            types={fileTypes}
+          />
+          <br />
+          <p>{files ? `File name: ${files.name}` : 'no files uploaded yet'}</p>
+        </Grid>
       </Grid>
     </Container>
   );

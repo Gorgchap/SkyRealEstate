@@ -36,9 +36,9 @@ export const Login = (): JSX.Element => {
             name="username"
             onBlur={handleBlur}
             onChange={handleChange}
-            sx={{mt: 1}}
+            sx={{ mt: 3 }}
             value={values.username}
-            variant="standard"
+            variant="outlined"
           />
           <TextField
             autoComplete="password"
@@ -50,17 +50,17 @@ export const Login = (): JSX.Element => {
             name="password"
             onBlur={handleBlur}
             onChange={handleChange}
-            sx={{mt: 1}}
+            sx={{ mt: 3 }}
             type="password"
             value={values.password}
-            variant="standard"
+            variant="outlined"
           />
           <Button disabled={!isValid} type="submit" variant="contained">
             Войти
           </Button>
         </Box>
         {error && (
-          <Box sx={{ minWidth: 150, pt: 2 }}>
+          <Box sx={{ minWidth: 150, pt: 3 }}>
             <Alert severity="error">{error}</Alert>
           </Box>
         )}

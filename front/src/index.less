@@ -1,14 +1,16 @@
+@import '@assets/styles/fonts';
+
 @base-font-size: 16px;
 @base-line-height: 1.15;
-@base-font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+@base-font-family: 'Montserrat', sans-serif;
 
 * {
   box-sizing: border-box;
   position: relative;
 
   --header-height: 60px;
-  --primary-color: #0458fe;
-  --secondary-color: #24314a;
+  --primary-color: #0500ff;
+  --secondary-color: #1976d2;
   --info-color: #e1e4f4;
   --error-color: #ff1f55;
   --success-color: #28a745;
@@ -22,8 +24,7 @@ html, body, #app {
 }
 
 body, #app {
-  background-color: var(--secondary-color);
-  color: var(--info-color);
+  background-color: var(--info-color);
   font-size: @base-font-size;
   font-family: @base-font-family;
   line-height: @base-line-height;

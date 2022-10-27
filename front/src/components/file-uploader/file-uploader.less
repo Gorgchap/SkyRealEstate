@@ -1,0 +1,64 @@
+.uploader-wrapper {
+  display: flex;
+  align-items: center;
+  flex-grow: 0;
+  width: 400px;
+  min-width: 350px;
+  max-width: 500px;
+  height: 48px;
+  position: relative;
+  border: 2px dashed var(--primary-color);
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 8px 16px 8px 8px;
+
+  &.is-disabled {
+    border: 2px dashed #666666;
+    cursor: no-drop;
+  }
+
+  & > input {
+    display: none;
+  }
+}
+
+.hover-message {
+  border: 2px dashed #666666;
+  border-radius: 5px;
+  background-color: #999999;
+  opacity: 0.5;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  & > span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+  }
+}
+
+.description-wrapper {
+  display: flex;
+  justify-content: space-between;
+  flex-grow: 1;
+
+  & > span {
+    color: #666666;
+    font-size: 12px;
+  }
+
+  &.error > span {
+    color: var(--error-color);
+  }
+
+  .file-types {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
