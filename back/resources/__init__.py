@@ -1,7 +1,7 @@
 # rest-api приложения
 from flask import Blueprint
 from flask_restful import Api
-from . import proba, user
+from . import proba, user, upload
 
 RestApiBP = Blueprint('restapi', __name__,
                       template_folder='templates')
@@ -14,4 +14,6 @@ RestApi.add_resource(proba.ProbaGet, '/proba')
 RestApi.add_resource(user.UserLogin, '/user/login')
 RestApi.add_resource(user.UserLogout, '/user/logout')
 RestApi.add_resource(user.UserCurrent, '/user/current')
+
+RestApi.add_resource(upload.Upload, '/upload')
 #get post
