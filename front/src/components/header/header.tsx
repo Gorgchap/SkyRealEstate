@@ -4,7 +4,6 @@ import { IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import { useAuth } from '@src/hooks';
 import './header.less';
 
-const logo = require('../../../assets/images/logo-animated.svg').default;
 const menuItems = [
   {
     id: 'menu-item-logout',
@@ -27,7 +26,7 @@ export const Header = (): JSX.Element => {
 
   return (
     <header className="app-header">
-      <img src={logo} alt="logo" />
+      <div className="app-header__logo"></div>
       <Typography variant="body1" component="div" sx={{ flexGrow: 1, textAlign: 'right' }}>
         {user.username}
       </Typography>

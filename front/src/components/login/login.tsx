@@ -23,7 +23,7 @@ export const Login = (): JSX.Element => {
     <Box className="login">
       <Paper className="login__container" elevation={10}>
         <Typography component="h1" variant="h5">
-          Вход в систему
+          Войти
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate>
           <TextField

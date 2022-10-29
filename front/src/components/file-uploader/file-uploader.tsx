@@ -3,40 +3,31 @@ import { useDragging } from '@src/hooks';
 import './file-uploader.less';
 
 interface Props {
-  children?: JSX.Element;
   classes?: string;
   disabled?: boolean;
-  handleChange?: (arg0: File | FileList) => void;
-  hoverTitle?: string;
-  files?: File | FileList | null;
-  label?: string;
+  handleChange?: (arg0: File[]) => void;
+  files?: File[];
+  maxCount?: number;
   maxSize?: number;
   minSize?: number;
-  multiple?: boolean;
   name?: string;
   onDraggingStateChange?: (dragging: boolean) => void;
-  onDrop?: (arg0: File | FileList) => void;
-  onSelect?: (arg0: File | FileList) => void;
+  onDrop?: (arg0: File[]) => void;
+  onSelect?: (arg0: File[]) => void;
   onSizeError?: (arg0: string) => void;
   onTypeError?: (arg0: string) => void;
   types?: string[];
 }
 
-const addFile = require('../../../assets/images/add-file.svg').default;
-const addFileDisabled = require('../../../assets/images/add-file-disabled.svg').default;
-
 export const FileUploader = ({
-  children,
   classes = '',
   disabled = false,
-  handleChange,
-  hoverTitle = '',
-  maxSize,
-  minSize,
   files,
-  label,
-  multiple = false,
-  name,
+  handleChange,
+  maxCount = 1,
+  maxSize,
+  minSize = 0,
+  name = 'files',
   onDraggingStateChange,
   onDrop,
   onSelect,
@@ -44,46 +35,39 @@ export const FileUploader = ({
   onTypeError,
   types = [],
 }: Props): JSX.Element => {
+  const accept = useMemo(() => `${types.map(type => '.' + type)}`, [types]);
+  const className = useMemo(() => `uploader-wrapper ${classes}${disabled ? ' is-disabled' : ''}`, [classes, disabled]);
   const inputRef = useRef<HTMLInputElement>(null);
   const labelRef = useRef<HTMLLabelElement>(null);
-  const [currFiles, setFiles] = useState<File | FileList | null>(null);
+  const dragging = useDragging({ handleChange, inputRef, labelRef, maxCount, onDrop });
+  const multiple = useMemo(() => maxCount > 1, [maxCount]);
+  const [currentFiles, setFiles] = useState<File[]>([]);
   const [error, setError] = useState(false);
   const [uploaded, setUploaded] = useState(false);
-
-  const Types = (): JSX.Element => {
-    if (types.length > 0) {
-      const max = maxSize ? `size >= ${maxSize}, ` : '';
-      const min = minSize ? `size <= ${minSize}, ` : '';
-      const str = types.join(',');
-      return <span className="file-types" title={`${max}${min}types: ${str}`}>{str}</span>;
-    } else {
-      return <></>;
-    }
-  }
 
   const validateFile = (file: File) => {
     const extension = file.name.split('.').pop()?.toLowerCase() ?? '';
     if (!types.map((type: string) => type.toLowerCase()).includes(extension)) {
       setError(true);
-      onTypeError?.('File type is not supported');
+      onTypeError?.('Неподдерживаемый тип файла');
       return false;
     } else if (maxSize && file.size / 1048576 > maxSize) {
       setError(true);
-      onSizeError?.('File size is too big');
+      onSizeError?.('Размер файла слишком большой');
       return false;
     } else if (minSize && file.size / 1048576 < minSize) {
       setError(true);
-      onSizeError?.('File size is too small');
+      onSizeError?.('Размер файла слишком маленький');
       return false;
     } else {
       return true;
     }
   };
 
-  const handleChanges = (fs: File | FileList): boolean => {
+  const handleChanges = (fs: File[]): boolean => {
     let checkError = false;
     if (fs) {
-      for (const file of fs instanceof File ? [fs] : fs) {
+      for (const file of fs) {
         checkError = !validateFile(file) || checkError;
       }
       if (checkError) return false;
@@ -108,13 +92,10 @@ export const FileUploader = ({
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = multiple ? e.target.files : e.target.files[0];
+    const files = Array.from(e.target.files).slice(0, maxCount);
     const success = handleChanges(files);
     if (onSelect && success) onSelect(files);
   };
-
-  const className = useMemo(() => `uploader-wrapper ${classes}${disabled ? ' is-disabled' : ''}`, [classes, disabled]);
-  const dragging = useDragging({ handleChange, inputRef, labelRef, multiple, onDrop });
 
   useEffect(() => {
     onDraggingStateChange?.(dragging);
@@ -122,66 +103,61 @@ export const FileUploader = ({
 
   useEffect(() => {
     if (files) {
-      setUploaded(true);
       setFiles(files);
+      setUploaded(true);
     } else {
       if (inputRef.current) inputRef.current.value = '';
+      setFiles([]);
       setUploaded(false);
-      setFiles(null);
     }
   }, [files]);
 
   return (
-    <label className={className} htmlFor={name} onClick={blockEvent} ref={labelRef}>
-      <input
-        accept={types.map((type: string) => `.${type.toLowerCase()}`).join(',')}
-        disabled={disabled}
-        multiple={multiple}
-        name={name}
-        onChange={handleInputChange}
-        onClick={handleClick}
-        ref={inputRef}
-        type="file"
-      />
-      {dragging && (
-        <div className="hover-message">
-          <span>{hoverTitle || 'Drop here'}</span>
-        </div>
-      )}
-      {children || (
-        <>
-          <img src={disabled ? addFileDisabled : addFile} alt="Please add file or files" />
-          <div className={`description-wrapper ${error ? 'error' : ''}`}>
-            {
-              error ? (
-                <span>
-                  File type/size error, hovered on types!
-                </span>
-              ) : (
-                <span>
-                  {disabled ? (
-                    <span>Upload disabled</span>
-                  ) : !currFiles && !uploaded ? (
-                    <>
-                      {label ? (
-                        <>
-                          <span>{label.split(' ')[0]}</span>{' '}
-                          {label.substring(label.indexOf(' ') + 1)}
-                        </>
-                      ) : (
-                        <><u>Upload</u> or drop a file right here</>
-                      )}
-                    </>
-                  ) : (
-                    <><u>Uploaded Successfully!</u> Upload another?</>
-                  )}
-                </span>
-              )
-            }
-            <Types />
+    <>
+      <label className={className} htmlFor={name} onClick={blockEvent} ref={labelRef}>
+        <input
+          accept={accept}
+          disabled={disabled}
+          multiple={multiple}
+          name={name}
+          onChange={handleInputChange}
+          onClick={handleClick}
+          ref={inputRef}
+          type="file"
+        />
+        {dragging && (
+          <div className="hover-message">
+            <span>Переместить { multiple ? 'файлы' : 'файл' } сюда</span>
           </div>
-        </>
-      )}
-    </label>
+        )}
+        {(
+          <>
+            <div className="file-icons">
+              <div className={`file-icon file-icon-xls${disabled ? ' disabled' : ''}`}></div>
+              <div className={`file-icon file-icon-xls${disabled ? ' disabled' : ''}`}></div>
+            </div>
+            {error ? (
+              <span className="description" style={{ color: 'var(--error-color)' }}>
+                Ошибка загрузки
+              </span>
+            ) : disabled ? (
+              <span className="description">Невозможно сделать загрузку файлов</span>
+            ) : currentFiles.length < 1 && !uploaded ? (
+              <>
+                <span className="description">
+                  <u style={{ color: 'var(--primary-color)' }}>Выберите файл</u> или переместите его сюда
+                </span>
+                <span className="description">
+                  { multiple && <>Можно добавить до 5 файлов в формате Excel. </> }
+                  Максимальный объём { multiple && <>каждого из файлов</> } – 10 Мб.
+                </span>
+              </>
+            ) : (
+              <span className="description">{ multiple ? 'Файлы успешно загружены!' : 'Файл успешно загружен!'}</span>
+            )}
+          </>
+        )}
+      </label>
+    </>
   );
 };

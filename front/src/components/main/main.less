@@ -1,0 +1,54 @@
+.uploader-description {
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: 0.15px;
+  line-height: 31px;
+  margin-bottom: 24px;
+}
+
+.uploader-file {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  max-width: 600px;
+  height: 80px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  margin-top: 16px;
+  padding: 16px;
+
+  &__close {
+    background-color: transparent;
+    border-width: 0;
+    color: #0000008a;
+    cursor: pointer;
+    font-size: 20px;
+    padding: 0;
+  }
+
+  &__name {
+    flex-grow: 1;
+    overflow: hidden;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  @media all and (max-width: 650px) {
+    width: 400px;
+  }
+
+  @media all and (max-width: 500px) {
+    width: 300px;
+  }
+}
+
+.uploader-image {
+  min-width: 425px;
+  min-height: 274px;
+  background-color: #000000;
+  -webkit-mask-image: url('@assets/images/uploader-image.svg');
+  mask-image: url('@assets/images/uploader-image.svg');
+  margin-bottom: 24px;
+}
