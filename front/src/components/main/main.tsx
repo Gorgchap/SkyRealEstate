@@ -65,7 +65,7 @@ export const Main = (): JSX.Element => {
       <FileUploader
         files={files.length > 0 ? files : null}
         handleChange={e => onChange(e)}
-        maxCount={5}
+        maxCount={1}
         maxSize={10}
         types={types}
       />

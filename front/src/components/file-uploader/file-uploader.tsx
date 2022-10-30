@@ -14,8 +14,6 @@ interface Props {
   onDraggingStateChange?: (dragging: boolean) => void;
   onDrop?: (arg0: File[]) => void;
   onSelect?: (arg0: File[]) => void;
-  onSizeError?: (arg0: string) => void;
-  onTypeError?: (arg0: string) => void;
   types?: string[];
 }
 
@@ -31,50 +29,42 @@ export const FileUploader = ({
   onDraggingStateChange,
   onDrop,
   onSelect,
-  onSizeError,
-  onTypeError,
-  types = [],
+  types,
 }: Props): JSX.Element => {
-  const accept = useMemo(() => `${types.map(type => '.' + type)}`, [types]);
+  const accept = useMemo(() => `${(types ?? []).map(type => '.' + type)}`, [types]);
   const className = useMemo(() => `uploader-wrapper ${classes}${disabled ? ' is-disabled' : ''}`, [classes, disabled]);
   const inputRef = useRef<HTMLInputElement>(null);
   const labelRef = useRef<HTMLLabelElement>(null);
   const dragging = useDragging({ handleChange, inputRef, labelRef, maxCount, onDrop });
   const multiple = useMemo(() => maxCount > 1, [maxCount]);
   const [currentFiles, setFiles] = useState<File[]>([]);
-  const [error, setError] = useState(false);
-  const [uploaded, setUploaded] = useState(false);
+  const [error, setError] = useState<string>('');
+  const [uploaded, setUploaded] = useState<boolean>(false);
 
-  const validateFile = (file: File) => {
+  const invalidFile = (file: File) => {
     const extension = file.name.split('.').pop()?.toLowerCase() ?? '';
-    if (!types.map((type: string) => type.toLowerCase()).includes(extension)) {
-      setError(true);
-      onTypeError?.('Неподдерживаемый тип файла');
-      return false;
-    } else if (maxSize && file.size / 1048576 > maxSize) {
-      setError(true);
-      onSizeError?.('Размер файла слишком большой');
-      return false;
-    } else if (minSize && file.size / 1048576 < minSize) {
-      setError(true);
-      onSizeError?.('Размер файла слишком маленький');
-      return false;
-    } else {
+    if (!types?.map((type: string) => type.toLowerCase()).includes(extension)) {
+      setError('неподдерживаемый тип файла');
       return true;
+    } else if (maxSize && file.size / 1048576 > maxSize) {
+      setError('размер файла слишком большой');
+      return true;
+    } else if (minSize && file.size / 1048576 < minSize) {
+      setError('размер файла слишком маленький');
+      return true;
+    } else {
+      return false;
     }
   };
 
   const handleChanges = (fs: File[]): boolean => {
-    let checkError = false;
     if (fs) {
-      for (const file of fs) {
-        checkError = !validateFile(file) || checkError;
-      }
-      if (checkError) return false;
+      const error = fs.some(file => invalidFile(file));
+      if (error) return false;
       handleChange?.(fs);
+      setError('');
       setFiles(fs);
       setUploaded(true);
-      setError(false);
       return true;
     } else {
       return false;
@@ -138,7 +128,7 @@ export const FileUploader = ({
             </div>
             {error ? (
               <span className="description" style={{ color: 'var(--error-color)' }}>
-                Ошибка загрузки
+                Ошибка загрузки: {error}
               </span>
             ) : disabled ? (
               <span className="description">Невозможно сделать загрузку файлов</span>
