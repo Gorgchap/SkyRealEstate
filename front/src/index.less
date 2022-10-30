@@ -1,16 +1,10 @@
-@import '@assets/styles/fonts';
-
-@base-font-size: 16px;
-@base-line-height: 1.15;
-@base-font-family: 'Montserrat', sans-serif;
-
 * {
   box-sizing: border-box;
   position: relative;
 
   --header-height: 60px;
-  --primary-color: #0500ff;
-  --secondary-color: #1976d2;
+  --primary-color: #1976d2;
+  --secondary-color: #9c27b0;
   --info-color: #e1e4f4;
   --error-color: #ff1f55;
   --success-color: #28a745;
@@ -25,9 +19,9 @@ html, body, #app {
 
 body, #app {
   background-color: var(--info-color);
-  font-size: @base-font-size;
-  font-family: @base-font-family;
-  line-height: @base-line-height;
+  font-size: 16px;
+  font-family: 'Montserrat', sans-serif;
+  line-height: 1.15;
 }
 
 #app {
@@ -38,6 +32,7 @@ body, #app {
 }
 
 h1, h2, h3, h4, h5, h6 {
+  font-family: 'Montserrat', sans-serif;
   font-weight: 600;
   margin-block-start: 0;
   margin-block-end: 0;
@@ -73,4 +68,32 @@ a {
   outline-width: 0;
   padding: 0;
   z-index: 5;
+}
+
+.file-icon {
+  min-width: 40px;
+  min-height: 40px;
+  background-color: var(--primary-color);
+
+  &.disabled {
+    background-color: #666666;
+  }
+
+  &-xls {
+    -webkit-mask-image: url('@assets/images/xls.svg');
+    mask-image: url('@assets/images/xls.svg');
+  }
+
+  &-xlsx {
+    -webkit-mask-image: url('@assets/images/xls.svg');
+    mask-image: url('@assets/images/xls.svg');
+  }
+}
+
+.success-icon {
+  min-width: 32px;
+  min-height: 32px;
+  background-color: var(--success-color);
+  -webkit-mask-image: url('@assets/images/success.svg');
+  mask-image: url('@assets/images/success.svg');
 }

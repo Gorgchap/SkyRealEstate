@@ -11,10 +11,10 @@ const root = createRoot(document.getElementById('app'));
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#0500ff',
+      main: '#1976d2',
     },
     secondary: {
-      main: '#1976d2',
+      main: '#9c27b0',
     },
     info: {
       main: '#e1e4f4',
@@ -28,9 +28,12 @@ const theme = createTheme({
     warning: {
       main: '#ffc107',
     },
+    action: {
+      active: '#0000008a',
+    },
   },
   typography: {
-    fontFamily: '\'Montserrat\',sans-serif'
+    fontFamily: '\'Montserrat\',sans-serif',
   },
 });
 

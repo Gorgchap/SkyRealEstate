@@ -47,27 +47,11 @@ module.exports = [
   {
     // Images Loader
     test: /\.(gif|jpe?g|tiff|png|webp|bmp|svg)$/,
-    use: [
-      {
-        loader: 'file-loader',
-        options: {
-          publicPath: 'assets/images',
-          outputPath: 'assets/images',
-        },
-      },
-    ],
+    type: 'asset/resource',
   },
   {
     // Font & SVG loader
     test: /\.(woff(2)?|ttf|otf|eot)$/,
-    use: [
-      {
-        loader: 'file-loader',
-        options: {
-          publicPath: 'assets/fonts',
-          outputPath: 'assets/fonts',
-        },
-      },
-    ],
+    type: 'asset/resource',
   },
 ];

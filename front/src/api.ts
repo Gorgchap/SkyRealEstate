@@ -29,8 +29,8 @@ export async function currentUser(): Promise<UserInfo> {
   try {
     const { data } = await api.get<UserInfo>('/user/current');
     return data;
-  } catch (err) {
-    throw new Error((err as AxiosError<ApiError>)?.response?.data.message);
+  } catch (e) {
+    throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);
   }
 }
 
@@ -40,8 +40,8 @@ export async function login(credentials: Credentials): Promise<LoginInfo> {
     Cookies.set('Authorization', data.access_token, { expires: 1 });
     setHeader('Authorization', `Bearer ${data.access_token}`);
     return data;
-  } catch (err) {
-    throw new Error((err as AxiosError<ApiError>)?.response?.data.message);
+  } catch (e) {
+    throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);
   }
 }
 
@@ -51,7 +51,7 @@ export async function logout(): Promise<LogoutInfo> {
     Cookies.remove('Authorization');
     deleteHeader('Authorization');
     return data;
-  } catch (err) {
-    throw new Error((err as AxiosError<ApiError>)?.response?.data.message);
+  } catch (e) {
+    throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);
   }
 }

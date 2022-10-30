@@ -1,11 +1,12 @@
 import React from 'react';
+import { Outlet } from 'react-router-dom';
 import { Header } from '@src/components/header/header';
 
-export const Container = ({ children }: React.PropsWithChildren): JSX.Element => {
+export const Container = (): JSX.Element => {
   return (
     <>
       <Header />
-      <main>{children}</main>
+      <Outlet />
     </>
   );
 };

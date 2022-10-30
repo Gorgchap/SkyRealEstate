@@ -7,7 +7,9 @@ export const App = (): JSX.Element => {
   const { user } = useAuth();
   return user?.id && (
     <Routes>
-      <Route path='/' element={user.id > -1 ? <Container><Main /></Container> : <Navigate to='/login' replace /> } />
+      <Route element={user.id > -1 ? <Container /> : <Navigate to='/login' replace /> }>
+        <Route path='/' element={<Main />} />
+      </Route>
       <Route path='/login' element={user.id > -1 ? <Navigate to='/' replace /> : <Login />} />
       <Route path='*' element={<Navigate to={user.id > -1 ? '/' : '/login'} replace />} />
     </Routes>

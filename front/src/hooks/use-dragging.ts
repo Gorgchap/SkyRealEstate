@@ -3,14 +3,14 @@ import { RefObject, useCallback, useEffect, useState } from 'react';
 let draggingCount = 0;
 
 interface Props {
-  handleChange?: (arg0: File | FileList) => void;
+  handleChange?: (arg0: File[]) => void;
   inputRef: RefObject<HTMLInputElement>;
   labelRef: RefObject<HTMLLabelElement>;
-  multiple?: boolean;
-  onDrop?: (arg0: File | FileList) => void;
+  maxCount: number;
+  onDrop?: (arg0: File[]) => void;
 }
 
-export const useDragging = ({ handleChange, inputRef, labelRef, multiple, onDrop }: Props): boolean => {
+export const useDragging = ({ handleChange, inputRef, labelRef, maxCount, onDrop }: Props): boolean => {
   const [dragging, setDragging] = useState(false);
   const handleClick = useCallback(() => inputRef.current.click(), [inputRef]);
 
@@ -41,7 +41,7 @@ export const useDragging = ({ handleChange, inputRef, labelRef, multiple, onDrop
     draggingCount = 0;
     const files = e.dataTransfer?.files;
     if (files?.length > 0) {
-      const result = multiple ? files : files[0];
+      const result = Array.from(files).slice(0, maxCount);
       handleChange?.(result);
       onDrop?.(result);
     }
