@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }: React.PropsWithChildren): JSX.Element
   const getUser = useCallback(async () => {
     try {
       setUser(await currentUser());
-      navigate('/', { replace: true });
+      navigate('/upload', { replace: true });
     } catch (err) {
       setUser({ email: '', id: -1, role: '', username: '' });
       navigate('/login', { replace: true });
@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }: React.PropsWithChildren): JSX.Element
       await login(credentials);
       setUser(await currentUser());
       setError('');
-      navigate('/', { replace: true });
+      navigate('/upload', { replace: true });
     } catch(e) {
       setError(e?.message || 'Произошла неизвестная ошибка');
     }

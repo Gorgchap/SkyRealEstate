@@ -2,21 +2,18 @@ import React, { useMemo, useState } from 'react';
 import { Button, CircularProgress, Grid, Typography } from '@mui/material';
 import { FileUploader } from '@src/components';
 import { UploadFile } from '@src/models';
-import './main.less';
+import './upload.less';
 
 const types = ['XLS', 'XLSX'];
 
-export const Main = (): JSX.Element => {
+export const Upload = (): JSX.Element => {
   const [files, setFiles] = useState<File[]>([]);
   const [result, setResult] = useState<UploadFile[]>([]);
   const [statuses, setStatues] = useState<string[]>([]);
   const [submit, setSubmit] = useState<boolean>(false);
   const disabled = useMemo(() => statuses.length < 1 || statuses.some(e => e !== 'success') || submit, [statuses, submit]);
 
-  const getExtension = (file: File): string => {
-    const [extension] = file.name.split('.').slice(-1);
-    return extension.toLowerCase();
-  };
+  const getExtension = (file: File): string => file.name.split('.').slice(-1)[0].toLowerCase();
 
   const onChange = (fs: File[]): void => {
     setFiles(fs);
@@ -65,7 +62,7 @@ export const Main = (): JSX.Element => {
       <FileUploader
         files={files.length > 0 ? files : null}
         handleChange={e => onChange(e)}
-        maxCount={1}
+        maxCount={5}
         maxSize={10}
         types={types}
       />
