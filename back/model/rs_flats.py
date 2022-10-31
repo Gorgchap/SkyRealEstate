@@ -16,4 +16,12 @@ class Flat(Base):
     to_metro = Column(Integer)
     condition = Column(String)
 
-
+    def __init__(self, bld_id="", rooms="", floor="", square="", kit_square="", balkon="", to_metro="", condition=""):
+        self.bld_id = bld_id
+        self.rooms = rooms
+        self.floor = floor
+        self.square = square
+        self.kit_square = kit_square
+        self.balkon = balkon
+        self.to_metro = to_metro
+        self.condition = condition
