@@ -7,3 +7,5 @@ export function pluralRus(count: number, ...variants: [string, string, string]):
     return `${count} ${variants[2]}`;
   }
 }
+
+export const sxProperties = { flexFlow: 'column nowrap', alignItems: 'center', margin: '0 auto', textAlign: 'center' };

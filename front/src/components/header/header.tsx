@@ -1,10 +1,19 @@
 import React, { MouseEvent, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { MoreVert } from '@mui/icons-material';
 import { IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import { useAuth } from '@src/hooks';
 import './header.less';
 
 const menuItems = [
+  {
+    id: 'menu-item-upload',
+    value: 'Загрузка',
+  },
+  {
+    id: 'menu-item-interactive',
+    value: 'Карта',
+  },
   {
     id: 'menu-item-logout',
     value: 'Выйти из системы',
@@ -13,13 +22,19 @@ const menuItems = [
 
 export const Header = (): JSX.Element => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { onLogout, user } = useAuth();
 
   const handleClickMenu = (event: MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget);
 
   const handleCloseMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(null);
-    if (event.currentTarget.id === 'menu-item-logout') {
+    if (event.currentTarget.id === 'menu-item-upload' && pathname !== '/upload') {
+      navigate('/upload');
+    } else if (event.currentTarget.id === 'menu-item-interactive' && pathname !== '/interactive') {
+      navigate('/interactive');
+    } else if (event.currentTarget.id === 'menu-item-logout') {
       onLogout();
     }
   };

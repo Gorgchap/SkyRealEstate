@@ -20,7 +20,6 @@ export const AuthProvider = ({ children }: React.PropsWithChildren): JSX.Element
   const getUser = useCallback(async () => {
     try {
       setUser(await currentUser());
-      navigate('/upload', { replace: true });
     } catch (err) {
       setUser({ email: '', id: -1, role: '', username: '' });
       navigate('/login', { replace: true });

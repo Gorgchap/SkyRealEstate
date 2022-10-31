@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Button, CircularProgress, Grid, Typography } from '@mui/material';
 import { FileUploader } from '@src/components';
 import { UploadFile } from '@src/models';
+import { sxProperties } from '@src/utils';
 import './upload.less';
 
 const types = ['XLS', 'XLSX'];
@@ -53,7 +54,7 @@ export const Upload = (): JSX.Element => {
   }, []);
 
   return (
-    <Grid container item direction="column" sx={{ alignItems: 'center', textAlign: 'center' }} p={3} xs={12} sm={10} md={8}>
+    <Grid container item sx={sxProperties} p={3} xs={12} sm={10} md={8}>
       {
         uploaded?.length < 1 && (
           <>
