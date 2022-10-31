@@ -3,6 +3,7 @@ from flask_restful import Resource as ResFree
 from model import rs_files, rs_buildings, rs_flats
 import base64
 import pandas as pd
+from api import db_session
 
 DIR_FILES = 'C:\\rs_files\\'
 columns = ['address', 'rooms', 'segment', 'floors', 'wall_mat', 'floor', 'square', 'kit_square', 'balkon', 'to_metro',
@@ -13,6 +14,8 @@ class Upload(ResFree):
         jsonData = request.get_json()
 
         try:
+            sess = db_session()
+
             for fileData in jsonData:
                 date = fileData['date']
                 name = fileData['name']
@@ -23,7 +26,10 @@ class Upload(ResFree):
 
                 with open(DIR_FILES+name, 'wr') as file:
                     file.write(data)
-                    rs_files.Files(name=name, path=DIR_FILES+name, date=date)
+                    rsf = rs_files.Files(name=name, path=DIR_FILES+name, date=date)
+
+                    sess.add(rsf)
+                    sess.flush()
 
                     df = pd.read_excel(DIR_FILES+name, header=None, names=columns)
                     df = df.dropna(how='any').reset_index(drop=True).iloc [1: , :]
@@ -31,11 +37,14 @@ class Upload(ResFree):
                     for i, row in df.iterrows():
                         build = rs_buildings.Building(address=row['address'], wall_mat=row['wall_mat'],
                                                       segment=row['segment'], floors=row['floors'])
+                        sess.add(build)
+                        sess.flush()
+
                         flats = rs_flats.Flat(bld_id=build.id, rooms=row['rooms'], floor=row['floor'],
                                               square=row['square'], kit_square=row['kit_square'], balkon=row['balkon'],
                                               to_metro=row['to_metro'], condition=row['condition'])
-
-
+                        sess.add(flats)
+                        sess.flush()
 
             return make_response(jsonify({"message": "Successful"}), 202)
         except KeyError:
