@@ -5,7 +5,7 @@ Base = declarative_base()
 
 #Частичная выгрузка московских районов из кладр
 class Region(Base):
-    __tablename__ = 'rs_users'
+    __tablename__ = 'rs_regions'
     id = Column(Integer, primary_key=True)
     name = Column(String)
     type = Column(String)
