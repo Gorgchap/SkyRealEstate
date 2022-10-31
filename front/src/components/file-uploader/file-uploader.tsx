@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useDragging } from '@src/hooks';
+import { pluralRus } from '@src/utils';
 import './file-uploader.less';
 
 interface Props {
@@ -122,10 +123,7 @@ export const FileUploader = ({
         )}
         {(
           <>
-            <div className="file-icons">
-              <div className={`file-icon file-icon-xls${disabled ? ' disabled' : ''}`}></div>
-              <div className={`file-icon file-icon-xls${disabled ? ' disabled' : ''}`}></div>
-            </div>
+            <div className={`file-icon file-icon-xls${disabled ? ' disabled' : ''}`}></div>
             {error ? (
               <span className="description" style={{ color: 'var(--error-color)' }}>
                 Ошибка загрузки: {error}
@@ -138,8 +136,8 @@ export const FileUploader = ({
                   <u style={{ color: 'var(--primary-color)' }}>Выберите файл</u> или переместите его сюда
                 </span>
                 <span className="description">
-                  { multiple && <>Можно добавить до 5 файлов в формате Excel. </> }
-                  Максимальный объём { multiple && <>каждого из файлов</> } – 10 Мб.
+                  Можно добавить { multiple ? 'до ' + pluralRus(maxCount, 'файл', 'файла', 'файлов') : '1 файл' } в
+                  формате .xls или .xlsx. Максимальный объём { multiple && <>каждого из файлов</> } – 10 Мб.
                 </span>
               </>
             ) : (

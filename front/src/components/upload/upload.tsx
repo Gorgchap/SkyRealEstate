@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Button, CircularProgress, Grid, Typography } from '@mui/material';
 import { FileUploader } from '@src/components';
 import { UploadFile } from '@src/models';
@@ -11,9 +11,10 @@ export const Upload = (): JSX.Element => {
   const [result, setResult] = useState<UploadFile[]>([]);
   const [statuses, setStatues] = useState<string[]>([]);
   const [submit, setSubmit] = useState<boolean>(false);
+  const [uploaded, setUploaded] = useState<UploadFile[]>();
   const disabled = useMemo(() => statuses.length < 1 || statuses.some(e => e !== 'success') || submit, [statuses, submit]);
 
-  const getExtension = (file: File): string => file.name.split('.').slice(-1)[0].toLowerCase();
+  const getExtension = (name: string): string => name.split('.').slice(-1)[0].toLowerCase();
 
   const onChange = (fs: File[]): void => {
     setFiles(fs);
@@ -47,16 +48,26 @@ export const Upload = (): JSX.Element => {
     setTimeout(() => setSubmit(false), 5000);
   };
 
+  useEffect(() => {
+    setUploaded([]);
+  }, []);
+
   return (
     <Grid container item direction="column" sx={{ alignItems: 'center', textAlign: 'center' }} p={3} xs={12} sm={10} md={8}>
-      <div className="uploader-image"></div>
-      <Typography component="h4" variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
-        Сделайте первый расчёт
-      </Typography>
-      <Typography component="p" variant="subtitle1" sx={{ fontWeight: 300, mb: 3 }}>
-        Здесь будут отображаться все ваши расчёты и выгрузки
-      </Typography>
-      <p className="uploader-description">
+      {
+        uploaded?.length < 1 && (
+          <>
+            <div className="uploader-image"></div>
+            <Typography component="h4" variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
+              Сделайте первый расчёт
+            </Typography>
+            <Typography component="p" variant="subtitle1" sx={{ fontWeight: 300, mb: 3 }}>
+              Здесь будут отображаться все ваши расчёты и выгрузки
+            </Typography>
+          </>
+        )
+      }
+      <p className="uploader-description" style={{ marginBottom: 24 }}>
         Загрузите Excel со списком объектов
       </p>
       <FileUploader
@@ -69,7 +80,7 @@ export const Upload = (): JSX.Element => {
       {
         files.length > 0 && statuses.length > 0 && files.map((file: File, index: number) => (
           <div className="uploader-file" key={file.name}>
-            <div className={`file-icon file-icon-${getExtension(file)}`}></div>
+            <div className={`file-icon file-icon-${getExtension(file.name)}`}></div>
             <p className="uploader-file__name">{file.name}</p>
             { statuses[index] !== 'loading' && (
               <button className="uploader-file__close" type="button" onClick={() => onDelete(index)}>
@@ -91,6 +102,27 @@ export const Upload = (): JSX.Element => {
       >
         Загрузить
       </Button>
+      {
+        uploaded?.length > 0 && (
+          <>
+            <p className="uploader-description" style={{ marginTop: 24, marginBottom: 24 }}>
+              Последние выгрузки
+            </p>
+            {
+              uploaded.map(file => (
+                <div className="uploader-item" key={file.name}>
+                  <div className={`file-icon file-icon-${getExtension(file.name)}`}></div>
+                  <div className="file">
+                    <p className="file-name">{file.name}</p>
+                    <p className="file-date">{ new Date(file.date).toLocaleDateString() }</p>
+                  </div>
+                  <a className="download-icon" download={file.name} href={file.result}></a>
+                </div>
+              ))
+            }
+          </>
+        )
+      }
     </Grid>
   );
 };
