@@ -136,7 +136,7 @@ export const FileUploader = ({
                   <u style={{ color: 'var(--primary-color)' }}>Выберите файл</u> или переместите его сюда
                 </span>
                 <span className="description">
-                  Можно добавить { multiple ? 'до ' + pluralRus(maxCount, 'файл', 'файла', 'файлов') : '1 файл' } в
+                  Можно добавить { multiple ? 'до ' + pluralRus(maxCount, 'файла', 'файлов', 'файлов') : '1 файл' } в
                   формате .xls или .xlsx. Максимальный объём { multiple && <>каждого из файлов</> } – 10 Мб.
                 </span>
               </>
