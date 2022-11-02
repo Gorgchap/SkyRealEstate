@@ -17,22 +17,20 @@ export const Upload = (): JSX.Element => {
 
   const getExtension = (name: string): string => name.split('.').slice(-1)[0].toLowerCase();
 
+  const getItem = (file: File, index: number, result: string): void => {
+    const item = { date: new Date(file.lastModified).toISOString(), name: file.name, result, size: file.size };
+    setResult(value => value.map((e: UploadFile, i: number) => index === i ? item : e));
+    setStatues(value => value.map((e: string, i: number) => index === i ? (result ? 'success' : 'error') : e));
+  };
+
   const onChange = (fs: File[]): void => {
     setFiles(fs);
     setResult(Array.from({ length: fs.length }, () => ({} as UploadFile)));
     setStatues(Array.from({ length: fs.length }, () => 'loading'));
     fs.forEach((file: File, index: number) => {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        const item = {
-          date: new Date(file.lastModified).toISOString(),
-          name: file.name,
-          result: reader.result as string,
-          size: file.size,
-        };
-        setResult(value => value.map((e: UploadFile, i: number) => index === i ? item : e));
-        setStatues(value => value.map((e: string, i: number) => index === i ? 'success' : e));
-      };
+      reader.onerror = () => getItem(file, index, '');
+      reader.onload = () => getItem(file, index, reader.result as string);
       reader.readAsDataURL(file);
     });
   };
@@ -88,8 +86,9 @@ export const Upload = (): JSX.Element => {
                 &#10006;
               </button>
             )}
+            { statuses[index] === 'error' && <div className="error-icon"></div> }
             { statuses[index] === 'loading' && <CircularProgress size={40} /> }
-            { statuses[index] === 'success' && <div className="success-icon"></div> }
+            { statuses[index] === 'success' && <div className="error-icon"></div> }
           </div>
         ))
       }
