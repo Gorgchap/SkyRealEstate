@@ -4,6 +4,7 @@ from model import rs_files, rs_buildings, rs_flats
 import base64
 import pandas as pd
 from api import db_session
+import uuid
 
 DIR_FILES = 'C:\\rs_files\\'
 columns = ['address', 'rooms', 'segment', 'floors', 'wall_mat', 'floor', 'square', 'kit_square', 'balkon', 'to_metro',
@@ -17,6 +18,9 @@ class Upload(ResFree):
             sess = db_session()
 
             for fileData in jsonData:
+
+                file_uid = str(uuid.uuid4())
+
                 date = fileData['date']
                 name = fileData['name']
                 result = fileData['result']
@@ -24,14 +28,16 @@ class Upload(ResFree):
 
                 data = base64.decode(result)
 
-                with open(DIR_FILES+name, 'wr') as file:
+                name_uid = file_uid+'_'+name
+
+                with open(DIR_FILES+name_uid, 'wr') as file:
                     file.write(data)
-                    rsf = rs_files.Files(name=name, path=DIR_FILES+name, date=date)
+                    rsf = rs_files.Files(name=name, path=DIR_FILES+name_uid, date=date)
 
                     sess.add(rsf)
                     sess.flush()
 
-                    df = pd.read_excel(DIR_FILES+name, header=None, names=columns)
+                    df = pd.read_excel(DIR_FILES+name_uid, header=None, names=columns)
                     df = df.dropna(how='any').reset_index(drop=True).iloc [1: , :]
 
                     for i, row in df.iterrows():
