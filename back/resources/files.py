@@ -1,4 +1,4 @@
-#from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.declarative import declarative_base
 from flask import make_response, jsonify, request
 from flask_restful import Resource as ResFree
 from model import rs_files, rs_buildings, rs_flats, user
@@ -11,11 +11,10 @@ DIR_FILES = 'C:\\rs_files\\'
 columns = ['address', 'rooms', 'segment', 'floors', 'wall_mat', 'floor', 'square', 'kit_square', 'balkon', 'to_metro',
            'condition']
 
-#Base = declarative_base()
+Base = declarative_base()
 
 class Upload(ResFree):
     def post(self):
-        jsonData = request.get_json()
         re = request.headers.environ['HTTP_AUTHORIZATION']
         rw = re.split(' ')
         if rw[0] != 'Bearer':
@@ -24,6 +23,8 @@ class Upload(ResFree):
         us = user.user.checkSession(rw[1])
         if us == None:
             return make_response(jsonify(message='No session'), 401)
+
+        jsonData = request.get_json()
 
         try:
             sess = db_session()
@@ -37,12 +38,12 @@ class Upload(ResFree):
                 result = fileData['result']
                 size = fileData['size']
 
-                data = base64.decode(result)
+                datafile = base64.decode(result)
 
                 name_uid = file_uid+'_'+name
 
                 with open(DIR_FILES+name_uid, 'wr') as file:
-                    file.write(data)
+                    file.write(datafile)
                     rsf = rs_files.Files(name=name, path=DIR_FILES+name_uid, date=date, size=size, type="in",
                                          user_id=us.user_id)
 
@@ -83,12 +84,31 @@ class Upload(ResFree):
 
 class List(ResFree):
     def get(self):
+        re = request.headers.environ['HTTP_AUTHORIZATION']
+        rw = re.split(' ')
+        if rw[0] != 'Bearer':
+            return make_response(jsonify(message='No authorization'), 401)
+
+        us = user.user.checkSession(rw[1])
+        if us == None:
+            return make_response(jsonify(message='No session'), 401)
+
         rargs = request.args
         last = rargs['last']
+
+        sess = db_session()
+
         if last:
-            pass
+            sql = "select id, name, date, size from rs_files where user_id = :us_id order by id desc limit 5"
+            rs = db_session().execute(sql, {'us_id': us.id, })
+            df = pd.DataFrame(rs.fetchall())
+            return df.to_json(orient='records')
+
         else:
-            pass
+            sql = "select id, name, date, size from rs_files where user_id = :us_id order by id desc"
+            rs = db_session().execute(sql, {'us_id': us.id, })
+            df = pd.DataFrame(rs.fetchall())
+            return df.to_json(orient='records')
 
 class Download(ResFree):
     def post(self):
