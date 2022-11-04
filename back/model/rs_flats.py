@@ -15,8 +15,10 @@ class Flat(Base):
     balkon = Column(Integer)
     to_metro = Column(Integer)
     condition = Column(String)
+    files_id = Column(Integer)
 
-    def __init__(self, bld_id="", rooms="", floor="", square="", kit_square="", balkon="", to_metro="", condition=""):
+    def __init__(self, bld_id="", rooms="", floor="", square="", kit_square="", balkon="", to_metro="", condition="",
+                 files_id=""):
         self.bld_id = bld_id
         self.rooms = rooms
         self.floor = floor
@@ -25,3 +27,4 @@ class Flat(Base):
         self.balkon = balkon
         self.to_metro = to_metro
         self.condition = condition
+        self.files_id = files_id

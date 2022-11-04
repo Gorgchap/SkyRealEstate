@@ -47,13 +47,13 @@ class Upload(ResFree):
 
                     for i, row in df.iterrows():
                         build = rs_buildings.Building(address=row['address'], wall_mat=row['wall_mat'],
-                                                      segment=row['segment'], floors=row['floors'])
+                                                      segment=row['segment'], floors=row['floors'], files_id=rsf.id)
                         sess.add(build)
                         sess.flush()
 
                         flats = rs_flats.Flat(bld_id=build.id, rooms=row['rooms'], floor=row['floor'],
                                               square=row['square'], kit_square=row['kit_square'], balkon=row['balkon'],
-                                              to_metro=row['to_metro'], condition=row['condition'])
+                                              to_metro=row['to_metro'], condition=row['condition'], files_id=rsf.id)
                         sess.add(flats)
                         sess.flush()
 
@@ -73,3 +73,11 @@ class Upload(ResFree):
     
         return False
     '''
+
+class List(ResFree):
+    def get(self):
+        pass
+
+class Download(ResFree):
+    def post(self):
+        pass

@@ -16,4 +16,6 @@ RestApi.add_resource(user.UserLogout, '/user/logout')
 RestApi.add_resource(user.UserCurrent, '/user/current')
 
 RestApi.add_resource(files.Upload, '/upload')
+RestApi.add_resource(files.List, '/list')
+RestApi.add_resource(files.Download, '/download')
 #get post

@@ -13,13 +13,15 @@ class Building(Base):
     wall_mat = Column(String)
     segment = Column(String)
     floors = Column(Integer)
+    files_id = Column(Integer)
 
-    def __init__(self, kladr_code="", reg_id="", address="", wall_mat="", segment="", floors=""):
+    def __init__(self, kladr_code="", reg_id="", address="", wall_mat="", segment="", floors="", files_id=""):
         self.kladr_code = kladr_code
         self.reg_id = reg_id
         self.address = address
         self.wall_mat = wall_mat
         self.segment = segment
         self.floors = floors
+        self.files_id = files_id
 
 
