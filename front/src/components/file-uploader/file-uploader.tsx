@@ -6,6 +6,7 @@ import './file-uploader.less';
 interface Props {
   classes?: string;
   disabled?: boolean;
+  externalError?: string;
   handleChange?: (arg0: File[]) => void;
   files?: File[];
   maxCount?: number;
@@ -21,6 +22,7 @@ interface Props {
 export const FileUploader = ({
   classes = '',
   disabled = false,
+  externalError = '',
   files,
   handleChange,
   maxCount = 1,
@@ -91,6 +93,10 @@ export const FileUploader = ({
   useEffect(() => {
     onDraggingStateChange?.(dragging);
   }, [dragging]);
+
+  useEffect(() => {
+    setError(externalError);
+  }, [externalError]);
 
   useEffect(() => {
     if (files) {

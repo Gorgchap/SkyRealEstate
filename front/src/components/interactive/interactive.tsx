@@ -5,7 +5,7 @@ import {
 import { Clusterer, Map, Placemark, YMaps } from '@pbe/react-yandex-maps';
 import { ObjectInfo } from '@src/components';
 import { ObjectInformation } from '@src/models';
-import { pluralRus } from '@src/utils';
+import { distanceArray, materialArray, pluralRus, roomsArray, segmentArray } from '@src/utils';
 import './interactive.less';
 
 const features = [
@@ -37,36 +37,6 @@ const features = [
 
 const comparator = (a: ObjectInformation, b: ObjectInformation): number => a.id > b.id ? 1 : -1;
 
-const distanceArray = [
-  { label: 'до 5 мин', value: 5 },
-  { label: 'до 10 мин', value: 10 },
-  { label: 'до 15 мин', value: 15 },
-  { label: 'до 20 мин', value: 20 },
-  { label: 'до 30 мин', value: 30 },
-];
-
-const materialArray = [
-  { label: 'Кирпич', value: 'brick' },
-  { label: 'Монолит', value: 'monolith' },
-  { label: 'Панель', value: 'panel' },
-];
-
-const roomsArray = [
-  { label: 'Не указано', value: '' },
-  { label: 'Студия', value: 'studio' },
-  { label: '1', value: '1' },
-  { label: '2', value: '2' },
-  { label: '3', value: '3' },
-  { label: '4', value: '4' },
-  { label: '5', value: '5' },
-];
-
-const segmentArray = [
-  { label: 'Новостройка', value: 'new' },
-  { label: 'Современное жильё', value: 'modern' },
-  { label: 'Старый жилой фонд', value: 'old' },
-];
-
 export const Interactive = (): JSX.Element => {
   const [activeTab, setActiveTab] = useState<number>(0);
   const [center, setCenter] = useState<[number, number]>([55.751999, 37.617734]);
@@ -89,7 +59,7 @@ export const Interactive = (): JSX.Element => {
   const [address, setAddress] = useState<string>('');
   const [distance, setDistance] = useState<number>(0);
   const [material, setMaterial] = useState<string[]>([]);
-  const [rooms, setRooms] = useState<string>('');
+  const [rooms, setRooms] = useState<number>(-1);
   const [segment, setSegment] = useState<string[]>([]);
   const [square, setSquare] = useState<number>(0);
   const [station, setStation] = useState<string>('');
@@ -103,7 +73,7 @@ export const Interactive = (): JSX.Element => {
       segment: `${segment}`,
       square,
       station: station.trim(),
-    }).filter(([, value]) => value));
+    }).filter(([key, value]) => key === 'rooms' || value));
     console.log(filters);
   };
 
@@ -131,7 +101,7 @@ export const Interactive = (): JSX.Element => {
     setAddress('');
     setDistance(0);
     setMaterial([]);
-    setRooms('');
+    setRooms(-1);
     setSegment([]);
     setSquare(0);
     setStation('');
@@ -221,7 +191,7 @@ export const Interactive = (): JSX.Element => {
                                  <TextField
                                    fullWidth
                                    label="Число комнат"
-                                   onChange={e => setRooms(e.target.value)}
+                                   onChange={e => setRooms(+e.target.value)}
                                    select
                                    size="small"
                                    value={rooms}

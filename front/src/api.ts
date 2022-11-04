@@ -58,8 +58,10 @@ export async function logout(): Promise<LogoutInfo> {
 
 export async function download(id: string): Promise<Blob> {
   try {
-    const { data } = await api.post<Blob>('/download', { id }, { responseType: 'blob' });
-    return data;
+    const data = await api.post('/download', { id }, { responseType: 'blob' });
+    return new Blob([data as unknown as BlobPart], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
   } catch (e) {
     throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);
   }
@@ -74,9 +76,9 @@ export async function list(): Promise<UserFile[]> {
   }
 }
 
-export async function upload(files: UserFile[]): Promise<Blob> {
+export async function upload(files: UserFile[]): Promise<boolean> {
   try {
-    const { data } = await api.post<Blob>('/upload', files);
+    const { data } = await api.post<boolean>('/upload', files);
     return data;
   } catch (e) {
     throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);

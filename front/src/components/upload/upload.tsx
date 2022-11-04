@@ -10,6 +10,7 @@ import './upload.less';
 const types = ['XLS', 'XLSX'];
 
 export const Upload = (): JSX.Element => {
+  const [externalError, setExternalError] = useState<string>();
   const [files, setFiles] = useState<File[]>([]);
   const [result, setResult] = useState<UserFile[]>([]);
   const [statuses, setStatues] = useState<string[]>([]);
@@ -68,12 +69,14 @@ export const Upload = (): JSX.Element => {
   };
 
   const onSubmit = async (): Promise<void> => {
+    setExternalError('');
     setSubmit(true);
     try {
       await upload(result);
       navigate('/interactive');
     } catch (err) {
       console.error(err);
+      setExternalError('проверьте входные данные на наличие неточностей');
     } finally {
       setSubmit(false);
     }
@@ -102,6 +105,7 @@ export const Upload = (): JSX.Element => {
         Загрузите Excel со списком объектов
       </p>
       <FileUploader
+        externalError={externalError}
         files={files.length > 0 ? files : null}
         handleChange={e => onChange(e)}
         maxCount={5}
