@@ -1,5 +1,5 @@
 from sqlalchemy.ext.declarative import declarative_base
-from flask import make_response, jsonify, request
+from flask import make_response, jsonify, request, send_file
 from flask_restful import Resource as ResFree
 from model import rs_files, rs_buildings, rs_flats, user
 import base64
@@ -100,16 +100,27 @@ class List(ResFree):
 
         if last:
             sql = "select id, name, date, size from rs_files where user_id = :us_id order by id desc limit 5"
-            rs = db_session().execute(sql, {'us_id': us.id, })
+            rs = db_session().execute(sql, {'us_id': us.id})
             df = pd.DataFrame(rs.fetchall())
             return df.to_json(orient='records')
 
         else:
             sql = "select id, name, date, size from rs_files where user_id = :us_id order by id desc"
-            rs = db_session().execute(sql, {'us_id': us.id, })
+            rs = db_session().execute(sql, {'us_id': us.id})
             df = pd.DataFrame(rs.fetchall())
             return df.to_json(orient='records')
 
 class Download(ResFree):
     def post(self):
-        pass
+        jsonData = request.get_json()
+        file_id = jsonData['id']
+
+        sql = "select name, path from rs_files where id = :file_id"
+        rs = db_session().execute(sql, {'file_id': file_id})
+
+        for row in rs:
+            try:
+                return send_file(row['path'], attachment_filename=row['name'])
+            except Exception:
+                return make_response(jsonify({"error": "true", "message": "File not found"}), 401)
+
