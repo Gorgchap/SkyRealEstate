@@ -13,10 +13,14 @@ columns = ['address', 'rooms', 'segment', 'floors', 'wall_mat', 'floor', 'square
 class Upload(ResFree):
     def post(self):
         jsonData = request.get_json()
-        token_see = request.headers['Authorization']
-        web_ses = user.User().checkSession(token_see)
-        if web_ses == None:
-            return make_response(jsonify({"error":"true", "message": "Invalid session"}), 401)
+        re = request.headers.environ['HTTP_AUTHORIZATION']
+        rw = re.split(' ')
+        if rw[0] != 'Bearer':
+            return make_response(jsonify(message='No authorization'), 401)
+
+        us = user.user.checkSession(rw[1])
+        if us == None:
+            return make_response(jsonify(message='No session'), 401)
 
         try:
             sess = db_session()
@@ -37,7 +41,7 @@ class Upload(ResFree):
                 with open(DIR_FILES+name_uid, 'wr') as file:
                     file.write(data)
                     rsf = rs_files.Files(name=name, path=DIR_FILES+name_uid, date=date, size=size, type="in",
-                                         user_id=web_ses.user_id)
+                                         user_id=us.user_id)
 
                     sess.add(rsf)
                     sess.flush()
@@ -76,7 +80,7 @@ class Upload(ResFree):
 
 class List(ResFree):
     def get(self):
-        pass
+        last = request.pa
 
 class Download(ResFree):
     def post(self):
