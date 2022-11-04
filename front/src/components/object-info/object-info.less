@@ -1,0 +1,56 @@
+.status {
+  display: inline-flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 12px;
+
+  &-pop {
+    color: #da8b90;
+
+    &::after {
+      content: '\D7';
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 16px;
+      height: 16px;
+      font-size: 19px;
+      margin-left: 8px;
+      border-radius: 50%;
+      background-color: #da8b90;
+      color: #ffffff;
+    }
+  }
+
+  &-push {
+    color: #80caff;
+
+    &::after {
+      content: '\2714';
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 16px;
+      height: 16px;
+      margin-left: 8px;
+      border-radius: 50%;
+      background-color: #80caff;
+      color: #ffffff;
+    }
+  }
+}
+
+.toggle-button.MuiToggleButton-root {
+  background-color: #eff3fd;
+  color: #afb5b8;
+}
+
+.toggle-button.MuiToggleButtonGroup-grouped:not(:first-of-type) {
+  border-left: 1px solid #afb5b8 !important;
+}
+
+.toggle-button.MuiToggleButton-root.Mui-selected {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  pointer-events: none;
+}

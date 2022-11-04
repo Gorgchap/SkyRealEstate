@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import Cookies from 'js-cookie';
-import { Credentials, LoginInfo, LogoutInfo, UserInfo } from '@src/models';
+import { Credentials, LoginInfo, LogoutInfo, UserFile, UserInfo } from '@src/models';
 
 interface ApiError {
   error: boolean;
@@ -50,6 +50,33 @@ export async function logout(): Promise<LogoutInfo> {
     const { data } = await api.get<LogoutInfo>('/user/logout');
     Cookies.remove('Authorization');
     deleteHeader('Authorization');
+    return data;
+  } catch (e) {
+    throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);
+  }
+}
+
+export async function download(id: string): Promise<Blob> {
+  try {
+    const { data } = await api.post<Blob>('/download', { id }, { responseType: 'blob' });
+    return data;
+  } catch (e) {
+    throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);
+  }
+}
+
+export async function list(): Promise<UserFile[]> {
+  try {
+    const { data } = await api.get<UserFile[]>('/list');
+    return data;
+  } catch (e) {
+    throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);
+  }
+}
+
+export async function upload(files: UserFile[]): Promise<Blob> {
+  try {
+    const { data } = await api.post<Blob>('/upload', files);
     return data;
   } catch (e) {
     throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);
