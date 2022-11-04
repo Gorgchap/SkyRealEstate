@@ -10,8 +10,14 @@ class Files(Base):
     date = Column(TIMESTAMP)
     name = Column(String)
     path = Column(String)
+    size = Column(Integer)
+    type = Column(String)
+    user_id = Column(Integer)
 
-    def __init__(self, name="", path="", date=""):
+    def __init__(self, name="", path="", date="", size=0, type="", user_id=0):
         self.date = date
         self.name = name
         self.path = path
+        self.size = size
+        self.type = type
+        self.user_id = user_id
