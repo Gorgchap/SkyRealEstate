@@ -21,3 +21,5 @@ class Files(Base):
         self.size = size
         self.type = type
         self.user_id = user_id
+
+files = Files()

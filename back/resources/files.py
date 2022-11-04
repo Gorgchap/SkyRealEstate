@@ -1,3 +1,4 @@
+#from sqlalchemy.ext.declarative import declarative_base
 from flask import make_response, jsonify, request
 from flask_restful import Resource as ResFree
 from model import rs_files, rs_buildings, rs_flats, user
@@ -9,6 +10,8 @@ import uuid
 DIR_FILES = 'C:\\rs_files\\'
 columns = ['address', 'rooms', 'segment', 'floors', 'wall_mat', 'floor', 'square', 'kit_square', 'balkon', 'to_metro',
            'condition']
+
+#Base = declarative_base()
 
 class Upload(ResFree):
     def post(self):
@@ -80,7 +83,12 @@ class Upload(ResFree):
 
 class List(ResFree):
     def get(self):
-        last = request.pa
+        rargs = request.args
+        last = rargs['last']
+        if last:
+            pass
+        else:
+            pass
 
 class Download(ResFree):
     def post(self):
