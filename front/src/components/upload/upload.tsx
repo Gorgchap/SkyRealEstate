@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, CircularProgress, Grid, Typography } from '@mui/material';
 import { download, list, upload } from '@src/api';
@@ -18,14 +18,6 @@ export const Upload = (): JSX.Element => {
   const [uploaded, setUploaded] = useState<UserFile[]>();
   const disabled = useMemo(() => statuses.length < 1 || statuses.some(e => e !== 'success') || submit, [statuses, submit]);
   const navigate = useNavigate();
-
-  const getData = useCallback(async () => {
-    try {
-      await setUploaded(await list(true));
-    } catch (err) {
-      console.error(err);
-    }
-  }, [setUploaded]);
 
   const getExtension = (name: string): string => name.split('.').slice(-1)[0].toLowerCase();
 
@@ -83,8 +75,10 @@ export const Upload = (): JSX.Element => {
   };
 
   useEffect(() => {
-    getData();
-  }, [getData]);
+    list(true)
+      .then(res => setUploaded(res))
+      .catch(err => console.log(err));
+  }, []);
 
   return (
     <Grid container item { ...gridProperties }>

@@ -61,9 +61,7 @@ export const FileUploader = ({
   };
 
   const handleChanges = (fs: File[]): boolean => {
-    if (fs) {
-      const error = fs.some(file => invalidFile(file));
-      if (error) return false;
+    if (fs && !fs.some(file => invalidFile(file))) {
       handleChange?.(fs);
       setError('');
       setFiles(fs);
