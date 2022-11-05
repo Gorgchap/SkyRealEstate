@@ -18,4 +18,5 @@ RestApi.add_resource(user.UserCurrent, '/user/current')
 RestApi.add_resource(files.Upload, '/upload')
 RestApi.add_resource(files.List, '/list')
 RestApi.add_resource(files.Download, '/download')
+RestApi.add_resource(services.Benchmarks, '/benchmarks')
 #get post

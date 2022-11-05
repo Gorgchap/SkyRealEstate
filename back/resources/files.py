@@ -53,6 +53,24 @@ class Upload(ResFree):
                     df = pd.read_excel(DIR_FILES+name_uid, header=None, names=columns)
                     df = df.dropna(how='any').reset_index(drop=True).iloc [1: , :]
 
+                    df['segment'] = df.segment.str.lower()
+
+                    segmap = {'новостройка':'new', 'современное жилье':'modern', 'старый жилой фонд':'old'}
+                    df['segment'] = df['segment'].map(segmap)
+
+                    colseg = df['segment'].nunique ()
+                    if colseg > 3:
+                        return make_response(jsonify({"error": "true", "message": "Invalid format xlsx"}), 401)
+
+                    df['wall_mat'] = df.wall_mat.str.lower()
+
+                    walmatmap = {'кирпич':'brick', 'панель':'panel', 'монолит':'monolit'}
+                    df['wall_mat'] = df['wall_mat'].map(walmatmap)
+
+                    colwal = df['wall_mat'].nunique()
+                    if colwal > 3:
+                        return make_response(jsonify({"error": "true", "message": "Invalid format xlsx"}), 401)
+
                     for i, row in df.iterrows():
                         build = rs_buildings.Building(address=row['address'], wall_mat=row['wall_mat'],
                                                       segment=row['segment'], floors=row['floors'], files_id=rsf.id)
