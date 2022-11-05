@@ -13,6 +13,7 @@ requests
 SQLAlchemy
 urllib3
 Werkzeug
+pandas
 psycopg2
 gunicorn
 mysqlclient
@@ -20,3 +21,4 @@ pymysql
 Scrapy
 selenium
 webdriver_manager
+yandex_geocoder

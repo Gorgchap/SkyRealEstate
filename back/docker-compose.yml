@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    network_mode: "host"
+#    network_mode: "host"
 #    command: python app.py --host 0.0.0.0 --port 5480 --debug
 #    command: flask run --port=5000 --host=0.0.0.0
     command: gunicorn --bind 0.0.0.0:5500 app:app --timeout 180 --workers=4
