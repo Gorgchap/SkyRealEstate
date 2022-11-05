@@ -1,5 +1,5 @@
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, TIMESTAMP, JSON, Float
+from sqlalchemy import Column, Integer, String, TIMESTAMP, JSON, Float, DECIMAL
 
 Base = declarative_base()
 
@@ -14,8 +14,8 @@ class Building(Base):
     segment = Column(String)
     floors = Column(Integer)
     files_id = Column(Integer)
-    lat = Column(Float)
-    lon = Column(Float)
+    lat = Column(DECIMAL)
+    lon = Column(DECIMAL)
 
     def __init__(self, kladr_code="", reg_id="", address="", wall_mat="", segment="", floors="", files_id="",
                  lat=0.0, lon=0.0):
