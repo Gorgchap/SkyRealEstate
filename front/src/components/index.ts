@@ -5,4 +5,5 @@ export * from './interactive/interactive';
 export * from './header/header';
 export * from './login/login';
 export * from './object-info/object-info';
+export * from './pool/pool';
 export * from './upload/upload';

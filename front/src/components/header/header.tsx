@@ -15,6 +15,10 @@ const menuItems = [
     value: 'Карта',
   },
   {
+    id: 'menu-item-pool',
+    value: 'Пул',
+  },
+  {
     id: 'menu-item-logout',
     value: 'Выйти из системы',
   },
@@ -34,7 +38,9 @@ export const Header = (): JSX.Element => {
       navigate('/upload');
     } else if (event.currentTarget.id === 'menu-item-interactive' && pathname !== '/interactive') {
       navigate('/interactive');
-    } else if (event.currentTarget.id === 'menu-item-logout') {
+    } else if (event.currentTarget.id === 'menu-item-pool' && pathname !== '/pool') {
+      navigate('/pool');
+    }  else if (event.currentTarget.id === 'menu-item-logout') {
       onLogout();
     }
   };
