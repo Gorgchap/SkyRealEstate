@@ -25,8 +25,7 @@ export const useDragging = ({ handleChange, inputRef, labelRef, maxCount, onDrop
     e.preventDefault();
     e.stopPropagation();
     draggingCount--;
-    if (draggingCount > 0) return;
-    setDragging(false);
+    if (draggingCount < 1) setDragging(false);
   }, []);
 
   const handleDrag = useCallback((e: DragEvent) => {

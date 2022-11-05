@@ -62,7 +62,6 @@ export const Interactive = (): JSX.Element => {
   const [rooms, setRooms] = useState<number>(-1);
   const [segment, setSegment] = useState<string[]>([]);
   const [square, setSquare] = useState<number>(0);
-  const [station, setStation] = useState<string>('');
 
   const getBenchmarks = (): void => {
     const filters = Object.fromEntries(Object.entries({
@@ -72,7 +71,6 @@ export const Interactive = (): JSX.Element => {
       rooms,
       segment: `${segment}`,
       square,
-      station: station.trim(),
     }).filter(([key, value]) => key === 'rooms' || value));
     console.log(filters);
   };
@@ -104,7 +102,6 @@ export const Interactive = (): JSX.Element => {
     setRooms(-1);
     setSegment([]);
     setSquare(0);
-    setStation('');
   };
 
   useEffect(() => {
@@ -148,14 +145,18 @@ export const Interactive = (): JSX.Element => {
                        ) : benchmarks.length > 0 ? (
                          <>
                            <div className="filters">
-                             <Box>
-                               <p>Выберите объекты оценки</p>
-                               <p>(выбрано { pluralRus(addedBenchmarks.length, 'объект', 'объекта', 'объектов') })</p>
-                               <FormControlLabel
-                                 control={<Checkbox checked={benchmarksChecked} onChange={onBenchmarksChange} />}
-                                 label="Выбрать все"
-                               />
-                             </Box>
+                             <p>Выберите объекты оценки</p>
+                             <p>(выбрано { pluralRus(addedBenchmarks.length, 'объект', 'объекта', 'объектов') })</p>
+                             <FormControlLabel
+                               control={<Checkbox checked={benchmarksChecked} onChange={onBenchmarksChange} />}
+                               label="Выбрать все"
+                               sx={{ width: '100%' }}
+                             />
+                             {addedBenchmarks.length > 0 && (
+                               <Button sx={{ padding: 0 }} variant="text">
+                                 Рассчитать
+                               </Button>
+                             )}
                              <div className="filter-menu" onClick={e => setBenchmarksEl(e.currentTarget)} />
                            </div>
                            <Menu
@@ -175,16 +176,6 @@ export const Interactive = (): JSX.Element => {
                                    onChange={e => setAddress(e.target.value)}
                                    size="small"
                                    value={address}
-                                 />
-                               </Grid>
-                               <Grid item xs={12}>
-                                 <TextField
-                                   defaultValue={''}
-                                   fullWidth
-                                   label="Ближайшее метро"
-                                   onChange={e => setStation(e.target.value)}
-                                   size="small"
-                                   value={station}
                                  />
                                </Grid>
                                <Grid item sx={{ width: 'calc(50% - 8px)', marginRight: '16px' }}>
