@@ -26,8 +26,8 @@ class Benchmarks(ResFree):
 
         dadress = jsonData['adress']
         dsquare = jsonData['square']
-        dstation = jsonData['station']
-        dsigment = jsonData['sigment']
+        drooms = jsonData['rooms']
+        dsegment = jsonData['segment']
         ddistance = jsonData['distance']
         dmaterial = jsonData['material']
 
@@ -38,21 +38,21 @@ class Benchmarks(ResFree):
             if qry != "": qry = qry+" and "
             qry = qry + "square == " + dsquare
 
-        if dstation != 0:
+        if drooms > -1:
             if qry != "": qry = qry + " and "
-            qry = qry + "station == " + dstation
+            qry = qry + "rooms == " + drooms
 
-        if dsigment != "":
+        if dsegment != "":
             if qry != "": qry = qry + " and "
-            qry = qry + "sigment == " + dsigment
+            qry = qry + "segments == " + dsegment
 
         if ddistance != 0:
             if qry != "": qry = qry + " and "
-            qry = qry + "distance == " + ddistance
+            qry = qry + "to_metro == " + ddistance
 
         if dmaterial != "":
             if qry != "": qry = qry + " and "
-            qry = qry + "material == " + dmaterial
+            qry = qry + "wall_mat == " + dmaterial
 
         if qry != "":
             dfr = df.query(qry)
