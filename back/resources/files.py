@@ -64,7 +64,7 @@ class Upload(ResFree):
 
                     df['wall_mat'] = df.wall_mat.str.lower()
 
-                    walmatmap = {'кирпич':'brick', 'панель':'panel', 'монолит':'monolit'}
+                    walmatmap = {'кирпич':'brick', 'панель':'panel', 'монолит':'monolith'}
                     df['wall_mat'] = df['wall_mat'].map(walmatmap)
 
                     colwal = df['wall_mat'].nunique()
