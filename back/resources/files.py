@@ -6,6 +6,10 @@ import base64
 import pandas as pd
 from api import db_session
 import uuid
+from decimal import Decimal
+from yandex_geocoder import Client
+
+ya_api_key = '821ea47c-9993-4f2c-8b79-837543567e00'
 
 DIR_FILES = 'C:\\rs_files\\'
 columns = ['address', 'rooms', 'segment', 'floors', 'wall_mat', 'floor', 'square', 'kit_square', 'balkon', 'to_metro',
@@ -71,9 +75,19 @@ class Upload(ResFree):
                     if colwal > 3:
                         return make_response(jsonify({"error": "true", "message": "Invalid format xlsx"}), 401)
 
+                    lat = 0
+                    lon = 0
+                    try:
+                        client = Client(ya_api_key)
+                        lon, lat = client.coordinates(row['address'])
+
+                    except:
+                        pass
+
                     for i, row in df.iterrows():
                         build = rs_buildings.Building(address=row['address'], wall_mat=row['wall_mat'],
-                                                      segment=row['segment'], floors=row['floors'], files_id=rsf.id)
+                                                      segment=row['segment'], floors=row['floors'], files_id=rsf.id,
+                                                      lat=lat, lon=lat)
                         sess.add(build)
                         sess.flush()
 

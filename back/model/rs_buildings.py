@@ -1,5 +1,5 @@
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, TIMESTAMP, JSON
+from sqlalchemy import Column, Integer, String, TIMESTAMP, JSON, Float
 
 Base = declarative_base()
 
@@ -14,8 +14,11 @@ class Building(Base):
     segment = Column(String)
     floors = Column(Integer)
     files_id = Column(Integer)
+    lat = Column(Float)
+    lon = Column(Float)
 
-    def __init__(self, kladr_code="", reg_id="", address="", wall_mat="", segment="", floors="", files_id=""):
+    def __init__(self, kladr_code="", reg_id="", address="", wall_mat="", segment="", floors="", files_id="",
+                 lat=0.0, lon=0.0):
         self.kladr_code = kladr_code
         self.reg_id = reg_id
         self.address = address
@@ -23,5 +26,7 @@ class Building(Base):
         self.segment = segment
         self.floors = floors
         self.files_id = files_id
+        self.lat = lat
+        self.lon = lon
 
 
