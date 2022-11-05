@@ -1,7 +1,7 @@
 # rest-api приложения
 from flask import Blueprint
 from flask_restful import Api
-from . import proba, user, files
+from . import proba, user, files, services
 
 RestApiBP = Blueprint('restapi', __name__,
                       template_folder='templates')
