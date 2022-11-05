@@ -79,7 +79,7 @@ class Upload(ResFree):
                     lon = 0
                     try:
                         client = Client(ya_api_key)
-                        lon, lat = client.coordinates(row['address'])
+                        lon, lat = client.coordinates("Россия " + row['address'])
                         lon = Decimal(lon)
                         lat = Decimal(lat)
 
@@ -89,7 +89,7 @@ class Upload(ResFree):
                     for i, row in df.iterrows():
                         build = rs_buildings.Building(address=row['address'], wall_mat=row['wall_mat'],
                                                       segment=row['segment'], floors=row['floors'], files_id=rsf.id,
-                                                      lat=lat, lon=lat)
+                                                      lat=lat, lon=lon)
                         sess.add(build)
                         sess.flush()
 
