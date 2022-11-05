@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import Cookies from 'js-cookie';
-import { Credentials, LoginInfo, LogoutInfo, UserFile, UserInfo } from '@src/models';
+import { Credentials, Filters, LoginInfo, LogoutInfo, UserFile, UserInfo } from '@src/models';
 
 interface ApiError {
   error: boolean;
@@ -56,6 +56,24 @@ export async function logout(): Promise<LogoutInfo> {
   }
 }
 
+export async function analoguesPost(ids: string[]): Promise<any> {
+  try {
+    const { data } = await api.post('/analogues', { ids });
+    return data;
+  } catch (e) {
+    throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);
+  }
+}
+
+export async function benchmarksPost(filters: Filters): Promise<any> {
+  try {
+    const { data } = await api.post('/benchmarks', filters);
+    return data;
+  } catch (e) {
+    throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);
+  }
+}
+
 export async function download(id: string): Promise<Blob> {
   try {
     const data = await api.post('/download', { id }, { responseType: 'blob' });
@@ -67,9 +85,27 @@ export async function download(id: string): Promise<Blob> {
   }
 }
 
-export async function list(): Promise<UserFile[]> {
+export async function list(last: boolean): Promise<UserFile[]> {
   try {
-    const { data } = await api.get<UserFile[]>('/list');
+    const { data } = await api.get<UserFile[]>(`/list?last=${last}`);
+    return data;
+  } catch (e) {
+    throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);
+  }
+}
+
+export async function poolGet(): Promise<any> {
+  try {
+    const { data } = await api.get('/pool');
+    return data;
+  } catch (e) {
+    throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);
+  }
+}
+
+export async function poolPost(): Promise<boolean> {
+  try {
+    const { data } = await api.post('/pool', {});
     return data;
   } catch (e) {
     throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);

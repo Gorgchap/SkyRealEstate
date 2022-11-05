@@ -1,8 +1,10 @@
 import React, { SyntheticEvent, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box, Button, Checkbox, Chip, CircularProgress, Grid, FormControlLabel, Menu, MenuItem, Tab, Tabs, TextField,
 } from '@mui/material';
 import { Clusterer, Map, Placemark, YMaps } from '@pbe/react-yandex-maps';
+import { benchmarksPost } from '@src/api';
 import { ObjectInfo } from '@src/components';
 import { ObjectInformation } from '@src/models';
 import { distanceArray, materialArray, pluralRus, roomsArray, segmentArray } from '@src/utils';
@@ -36,10 +38,12 @@ const features = [
 ];
 
 const comparator = (a: ObjectInformation, b: ObjectInformation): number => a.id > b.id ? 1 : -1;
+const defaultCenter: [number, number] = [55.751999, 37.617734];
 
 export const Interactive = (): JSX.Element => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<number>(0);
-  const [center, setCenter] = useState<[number, number]>([55.751999, 37.617734]);
+  const [center, setCenter] = useState<[number, number]>(defaultCenter);
   const [zoom, setZoom] = useState<number>(12);
 
   const [addedAnalogues, setAddedAnalogues] = useState<ObjectInformation[]>([]);
@@ -63,7 +67,25 @@ export const Interactive = (): JSX.Element => {
   const [segment, setSegment] = useState<string[]>([]);
   const [square, setSquare] = useState<number>(0);
 
-  const getBenchmarks = (): void => {
+  const getAnalogues = (): void => {
+    try {
+      setAnaloguesLoading(true);
+      const data: any[] = [];
+      setAddedAnalogues([...data]);
+      setAnalogues(data);
+      setAnaloguesChecked(true);
+      setAnaloguesState('push');
+      setActiveTab(1);
+    } catch (e) {
+      console.error(e);
+      setAddedAnalogues([]);
+      setAnalogues([]);
+      setAnaloguesLoading(false);
+      setAnaloguesState('');
+    }
+  };
+
+  const getBenchmarks = async (): Promise<void> => {
     const filters = Object.fromEntries(Object.entries({
       address: address.trim(),
       distance,
@@ -72,7 +94,21 @@ export const Interactive = (): JSX.Element => {
       segment: `${segment}`,
       square,
     }).filter(([key, value]) => key === 'rooms' || value));
-    console.log(filters);
+    try {
+      setBenchmarksLoading(true);
+      const data = await benchmarksPost(filters);
+      setBenchmarks(data);
+    } catch (e) {
+      console.error(e);
+      setBenchmarks([]);
+    } finally {
+      setBenchmarksLoading(false);
+      setAddedBenchmarks([]);
+      setBenchmarksState('');
+      setAnalogues([]);
+      setAddedAnalogues([]);
+      setAnaloguesState('');
+    }
   };
 
   const onAnaloguesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,6 +131,10 @@ export const Interactive = (): JSX.Element => {
     setAddedBenchmarks(value => type === 'push' ? value.concat(item).sort(comparator) : value.filter(e => e.id !== item.id));
   };
 
+  const onPool = (): void => {
+    navigate('/pool');
+  };
+
   const resetBenchmarkFilters = (): void => {
     setAddress('');
     setDistance(0);
@@ -105,19 +145,11 @@ export const Interactive = (): JSX.Element => {
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      setAnalogues([]);
-      setBenchmarks(Array.from({ length: 100 }, (_, index) => ({
-        id: '0'.repeat(3 - `${index + 1}`.length) + `${index + 1}`,
-        address: `Box ${index + 1}`,
-      })));
-      setAnaloguesLoading(false);
-      setBenchmarksLoading(false);
-    }, 3000);
-    setTimeout(() => {
-      setCenter([55.651999, 37.517734]);
-      setZoom(10);
-    }, 7000);
+    // getBenchmarks();
+    setBenchmarks(Array.from({ length: 100 }, (_, index) => ({
+      id: '0'.repeat(3 - `${index + 1}`.length) + `${index + 1}`,
+      address: `Box ${index + 1}`,
+    })));
   }, []);
 
   return (
@@ -153,7 +185,7 @@ export const Interactive = (): JSX.Element => {
                                sx={{ width: '100%' }}
                              />
                              {addedBenchmarks.length > 0 && (
-                               <Button sx={{ padding: 0 }} variant="text">
+                               <Button onClick={() => getAnalogues()} sx={{ padding: 0 }} variant="text">
                                  Рассчитать
                                </Button>
                              )}

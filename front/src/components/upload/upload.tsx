@@ -21,7 +21,7 @@ export const Upload = (): JSX.Element => {
 
   const getData = useCallback(async () => {
     try {
-      await setUploaded(await list());
+      await setUploaded(await list(true));
     } catch (err) {
       console.error(err);
     }
@@ -124,7 +124,7 @@ export const Upload = (): JSX.Element => {
             )}
             { statuses[index] === 'error' && <div className="error-icon"></div> }
             { statuses[index] === 'loading' && <CircularProgress size={40} /> }
-            { statuses[index] === 'success' && <div className="error-icon"></div> }
+            { statuses[index] === 'success' && <div className="success-icon"></div> }
           </div>
         ))
       }
