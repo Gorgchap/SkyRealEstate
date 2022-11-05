@@ -9,7 +9,7 @@ import uuid
 from decimal import Decimal
 from yandex_geocoder import Client
 
-ya_api_key = '821ea47c-9993-4f2c-8b79-837543567e00'
+ya_api_key = 'fcebe29e-908a-4101-9808-b634f1c025ad'
 
 DIR_FILES = 'C:\\rs_files\\'
 columns = ['address', 'rooms', 'segment', 'floors', 'wall_mat', 'floor', 'square', 'kit_square', 'balkon', 'to_metro',
@@ -80,6 +80,8 @@ class Upload(ResFree):
                     try:
                         client = Client(ya_api_key)
                         lon, lat = client.coordinates(row['address'])
+                        lon = Decimal(lon)
+                        lat = Decimal(lat)
 
                     except:
                         pass
