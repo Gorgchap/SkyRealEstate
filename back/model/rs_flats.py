@@ -16,7 +16,7 @@ class Flat(Base):
     to_metro = Column(Integer)
     condition = Column(String)
     files_id = Column(Integer)
-    price = Column(Float)
+    price = Column(Integer)
 
     def __init__(self, bld_id="", rooms="", floor="", square="", kit_square="", balkon="", to_metro="", condition="",
                  files_id="", price=""):
