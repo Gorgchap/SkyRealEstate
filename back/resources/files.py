@@ -136,13 +136,13 @@ class List(ResFree):
             sql = "select id, name, date, size from rs_files where user_id = :us_id order by id desc limit 5"
             rs = db_session().execute(sql, {'us_id': us.id})
             df = pd.DataFrame(rs.fetchall())
-            return df.to_json(orient='records')
+            return jsonify(df.to_json(orient='records'))
 
         else:
             sql = "select id, name, date, size from rs_files where user_id = :us_id order by id desc"
             rs = db_session().execute(sql, {'us_id': us.id})
             df = pd.DataFrame(rs.fetchall())
-            return df.to_json(orient='records')
+            return jsonify(df.to_json(orient='records'))
 
 class Download(ResFree):
     def post(self):
