@@ -73,23 +73,31 @@ class Analogues(ResFree):
         for row in jsonData:
             idbuild.append(row)
 
+        if len(idbuild) == 0:
+            return jsonify("")
+
         sql = "select * from rs_benchmarks WHERE bid in :idbuild"
         rs = db_session().execute(sql, {'idbuild': idbuild})
-        df = pd.DataFrame(rs.fetchall())
+        dfb = pd.DataFrame(rs.fetchall())
 
-        arr_rooms = []
-        arr_square = []
-        arr_segment = []
-        arr_distance = []
-        arr_material = []
+        arr_rooms = dfb['rooms'].unique()
+        arr_square = dfb['square'].unique()
+        arr_segment = dfb['segment'].unique()
+        arr_distance = dfb['to_metro'].unique()
+        arr_material = dfb['wall_mat'].unique()
 
+        '''
         for i, row in df.iterrows():
             arr_rooms.append(row['square'])
             arr_square.append(row['rooms'])
             arr_segment.append(row['segment'])
             arr_distance.append(row['to_metro'])
             arr_material.append(row['wall_mat'])
+        '''
 
+        sql = "select * from rs_benchmarks WHERE rooms in :arr_rooms and square in :arr_square and segment in :arr_segment and to_metro in :arr_distance and wall_mat in :arr_material"
+        rs = db_session().execute(sql, {'arr_rooms': arr_rooms, 'arr_square': arr_square, 'arr_segment': arr_segment, 'arr_distance': arr_distance, 'arr_material': arr_material})
+        df = pd.DataFrame(rs.fetchall())
 
         df_as_json = df.to_dict(orient='index')
         return jsonify(df_as_json)
