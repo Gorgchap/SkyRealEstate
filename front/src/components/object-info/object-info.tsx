@@ -35,9 +35,9 @@ export const ObjectInfo = ({ info, showChips = true, state, updateInfo }: Props)
         { info.to_metro } мин. от метро
       </Typography>
       <Typography component="p" sx={{ fontWeight: 700, lineHeight: 1.4 }}>
-        { info.rooms < 1 ? 'Студия' : pluralRus(info.rooms, 'комната', 'комнаты', 'комнат') } •
-        { segmentArray.find(s => s.value === info.segments)?.label ?? '–' } •
-        { pluralRus(info.floors, 'этаж', 'этажа', 'этажей') } •
+        { info.rooms < 1 ? 'Студия' : pluralRus(info.rooms, 'комната', 'комнаты', 'комнат') } •&nbsp;
+        { segmentArray.find(s => s.value === info.segments)?.label ?? '–' } •&nbsp;
+        { pluralRus(info.floors, 'этаж', 'этажа', 'этажей') } •&nbsp;
         { materialArray.find(s => s.value === info.wall_mat)?.label ?? '–' }
       </Typography>
       {showChips && (

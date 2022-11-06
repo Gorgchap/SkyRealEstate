@@ -56,9 +56,9 @@ export async function logout(): Promise<LogoutInfo> {
   }
 }
 
-export async function analoguesPost(ids: string[]): Promise<any> {
+export async function analoguesPost(ids: number[]): Promise<any> {
   try {
-    const { data } = await api.post('/analogues', { ids });
+    const { data } = await api.post('/analogues', ids);
     return data;
   } catch (e) {
     throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);

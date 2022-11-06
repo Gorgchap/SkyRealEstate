@@ -4,7 +4,7 @@ import {
   Box, Button, Checkbox, Chip, CircularProgress, Grid, FormControlLabel, Menu, MenuItem, Tab, Tabs, TextField,
 } from '@mui/material';
 import { Clusterer, Map, Placemark, YMaps } from '@pbe/react-yandex-maps';
-import { benchmarksPost } from '@src/api';
+import {analoguesPost, benchmarksPost} from '@src/api';
 import { ObjectInfo } from '@src/components';
 import { ObjectInformation } from '@src/models';
 import { distanceArray, materialArray, pluralRus, roomsArray, segmentArray } from '@src/utils';
@@ -67,10 +67,10 @@ export const Interactive = (): JSX.Element => {
   const [segment, setSegment] = useState<string[]>([]);
   const [square, setSquare] = useState<number>(0);
 
-  const getAnalogues = (): void => {
+  const getAnalogues = async (): Promise<void> => {
     try {
       setAnaloguesLoading(true);
-      const data: any[] = [];
+      const data = await analoguesPost(addedBenchmarks.map(e => e.bid));
       setAddedAnalogues([...data]);
       setAnalogues(data);
       setAnaloguesChecked(true);
@@ -80,8 +80,9 @@ export const Interactive = (): JSX.Element => {
       console.error(e);
       setAddedAnalogues([]);
       setAnalogues([]);
-      setAnaloguesLoading(false);
       setAnaloguesState('');
+    } finally {
+      setAnaloguesLoading(false);
     }
   };
 
