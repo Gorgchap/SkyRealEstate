@@ -10,32 +10,25 @@ import { ObjectInformation } from '@src/models';
 import { distanceArray, materialArray, pluralRus, roomsArray, segmentArray } from '@src/utils';
 import './interactive.less';
 
-const features = [
-  {
+const getMarker = (coordinates: [number, number], prices?: number[]): any => {
+  return {
     id: 0,
-    geometry: { type: 'Point', coordinates: [55.831903, 37.411961] },
+    geometry: { type: 'Point', coordinates },
     options: {
       balloonCloseButton: false,
       balloonOffset: [0, -20],
       hideIconOnBalloonOpen: false,
-      preset: 'islands#blueStretchyIcon',
+      preset: 'islands#' + prices ? 'darkGreenStretchyIcon' : 'blueStretchyIcon',
     },
     properties: {
-      balloonContent: '<img src="http://img-fotki.yandex.ru/get/6114/82599242.2d6/0_88b97_ec425cf5_M" alt="" />',
-      hintContent: 'Нажмите на точку для показа или скрытия подсказки',
-      iconContent: '<b>2</b> – от 8.5 млн',
+      balloonContent: prices ? prices.join('<br>') : '',
+      hintContent: prices
+        ? 'Нажмите на точку для показа или скрытия подсказки'
+        : 'Здесь находятся эталонные объекты',
+      iconContent: prices ? `${prices.length > 1 ? `<b>${prices.length}</b> – ` : ''}от ${Math.min(...prices)}` : '',
     },
-  },
-  {
-    id: 1,
-    geometry: { type: 'Point', coordinates: [55.821903, 37.421961] },
-    options: { preset: 'islands#darkGreenStretchyIcon' },
-    properties: {
-      balloonContent: '<img src="http://img-fotki.yandex.ru/get/6114/82599242.2d6/0_88b97_ec425cf5_M" alt="" />',
-      iconContent: 'Azerbaijan',
-    },
-  },
-];
+  }
+};
 
 const comparator = (a: ObjectInformation, b: ObjectInformation): number => a.bid - b.bid;
 const defaultCenter: [number, number] = [55.751999, 37.617734];
@@ -44,6 +37,7 @@ export const Interactive = (): JSX.Element => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<number>(0);
   const [center, setCenter] = useState<[number, number]>(defaultCenter);
+  const [feat, setFeat] = useState<any[]>([]);
   const [zoom, setZoom] = useState<number>(12);
 
   const [addedAnalogues, setAddedAnalogues] = useState<ObjectInformation[]>([]);
@@ -98,6 +92,12 @@ export const Interactive = (): JSX.Element => {
         square,
       });
       setBenchmarks(result);
+      if (result.length > 0) {
+        const coordinates: [number, number] = [+result[0].lat, +result[0].lon];
+        setCenter(coordinates);
+        setFeat([getMarker(coordinates)]);
+        setZoom(12);
+      }
     } catch (e) {
       console.error(e);
       setBenchmarks([]);
@@ -208,7 +208,6 @@ export const Interactive = (): JSX.Element => {
                              <Grid container sx={{ maxWidth: '350px', minWidth: '350px', rowGap: 2, mx: 2, my: 1 }}>
                                <Grid item xs={12}>
                                  <TextField
-                                   defaultValue={''}
                                    fullWidth
                                    label="Адрес"
                                    onChange={e => setAddress(e.target.value)}
@@ -360,7 +359,74 @@ export const Interactive = (): JSX.Element => {
                              transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                            >
                              <Grid container sx={{ maxWidth: '350px', minWidth: '350px', mx: 1.5, my: 0.5 }}>
-                               InnerContent
+                               <Grid item sx={{ width: 'calc(50% - 8px)' }}>
+                                 <TextField
+                                   InputProps={{ inputProps: { type: 'number', min: 0, step: 0.1 } }}
+                                   fullWidth
+                                   label="Этаж расположения (%)"
+                                   onChange={e => +e.target.value > 0 && setSquare(+e.target.value)}
+                                   size="small"
+                                   value={2.5}
+                                 />
+                               </Grid>
+                               <Grid item sx={{ width: 'calc(50% - 8px)' }}>
+                                 <TextField
+                                   InputProps={{ inputProps: { type: 'number', min: 0, step: 0.1 } }}
+                                   fullWidth
+                                   label="Площадь дома (%)"
+                                   onChange={e => +e.target.value > 0 && setSquare(+e.target.value)}
+                                   size="small"
+                                   value={1.5}
+                                 />
+                               </Grid>
+                               <Grid item sx={{ width: 'calc(50% - 8px)' }}>
+                                 <TextField
+                                   InputProps={{ inputProps: { type: 'number', min: 0, step: 0.1 } }}
+                                   fullWidth
+                                   label="Площадь кухни (%)"
+                                   onChange={e => +e.target.value > 0 && setSquare(+e.target.value)}
+                                   size="small"
+                                   value={2}
+                                 />
+                               </Grid>
+                               <Grid item sx={{ width: 'calc(50% - 8px)' }}>
+                                 <TextField
+                                   InputProps={{ inputProps: { type: 'number', min: 0, step: 0.1 } }}
+                                   fullWidth
+                                   label="Балкон/лоджия (%)"
+                                   onChange={e => +e.target.value > 0 && setSquare(+e.target.value)}
+                                   size="small"
+                                   value={5}
+                                 />
+                               </Grid>
+                               <Grid item sx={{ width: 'calc(50% - 8px)' }}>
+                                 <TextField
+                                   InputProps={{ inputProps: { type: 'number', min: 0, step: 0.1 } }}
+                                   fullWidth
+                                   label="Удаленность от метро (%)"
+                                   onChange={e => +e.target.value > 0 && setSquare(+e.target.value)}
+                                   size="small"
+                                   value={1}
+                                 />
+                               </Grid>
+                               <Grid item sx={{ width: 'calc(50% - 8px)' }}>
+                                 <TextField
+                                   InputProps={{ inputProps: { type: 'number', min: 0, step: 0.1 } }}
+                                   fullWidth
+                                   label="Состояние отделки (%)"
+                                   onChange={e => +e.target.value > 0 && setSquare(+e.target.value)}
+                                   size="small"
+                                   value={1}
+                                 />
+                               </Grid>
+                               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-evenly' }}>
+                                 <Button color="primary" type="button" variant="contained">
+                                   Рассчитать пул
+                                 </Button>
+                                 <Button color="info" type="button" variant="contained">
+                                   Сбросить
+                                 </Button>
+                               </Grid>
                              </Grid>
                            </Menu>
                            {
@@ -395,7 +461,7 @@ export const Interactive = (): JSX.Element => {
             state={{ center, controls: ['zoomControl'], zoom }}
           >
             <Clusterer options={{ preset: 'islands#invertedVioletClusterIcons' }}>
-              {features.map((items) => (
+              {feat.map((items) => (
                 <Placemark
                   key={items.id}
                   geometry={items.geometry}
