@@ -87,8 +87,8 @@ export async function download(id: string): Promise<Blob> {
 
 export async function list(last: boolean): Promise<UserFile[]> {
   try {
-    const { data } = await api.get<UserFile[]>(`/list?last=${last}`);
-    return data;
+    const { data } = await api.get<Record<string, UserFile>>(`/list?last=${last}`);
+    return Object.values(data);
   } catch (e) {
     throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);
   }

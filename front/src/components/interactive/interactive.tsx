@@ -118,7 +118,12 @@ export const Interactive = (): JSX.Element => {
   };
 
   const onAnaloguesUpdate = (item: ObjectInformation, type: string): void => {
-    setAddedAnalogues(value => type === 'push' ? value.concat(item).sort(comparator) : value.filter(e => e.id !== item.id));
+    if (addedAnalogues.length === analogues.length - 1 && type === 'push') {
+      setAddedAnalogues([...analogues]);
+      setAnaloguesChecked(true);
+    } else {
+      setAddedAnalogues(value => type === 'push' ? value.concat(item).sort(comparator) : value.filter(e => e.id !== item.id));
+    }
   };
 
   const onBenchmarksChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -128,7 +133,12 @@ export const Interactive = (): JSX.Element => {
   };
 
   const onBenchmarksUpdate = (item: ObjectInformation, type: string): void => {
-    setAddedBenchmarks(value => type === 'push' ? value.concat(item).sort(comparator) : value.filter(e => e.id !== item.id));
+    if (addedBenchmarks.length === benchmarks.length - 1 && type === 'push') {
+      setAddedBenchmarks([...benchmarks]);
+      setBenchmarksChecked(true);
+    } else {
+      setAddedBenchmarks(value => type === 'push' ? value.concat(item).sort(comparator) : value.filter(e => e.id !== item.id));
+    }
   };
 
   const onPool = (): void => {
@@ -145,11 +155,13 @@ export const Interactive = (): JSX.Element => {
   };
 
   useEffect(() => {
-    // getBenchmarks();
-    setBenchmarks(Array.from({ length: 100 }, (_, index) => ({
-      id: '0'.repeat(3 - `${index + 1}`.length) + `${index + 1}`,
-      address: `Box ${index + 1}`,
-    })));
+    getBenchmarks();
+    setTimeout(() => {
+      setAnalogues(Array.from({ length: 10 }, (_, index) => ({
+        id: '0'.repeat(3 - `${index + 1}`.length) + `${index + 1}`,
+        address: `Box ${index + 1}`,
+      })));
+    }, 2000);
   }, []);
 
   return (
@@ -331,14 +343,18 @@ export const Interactive = (): JSX.Element => {
                        ) : analogues.length > 0 ? (
                          <>
                            <div className="filters">
-                             <div>
-                               <p>Выберите аналоги для пула</p>
-                               <p>(выбрано { pluralRus(addedAnalogues.length, 'объект', 'объекта', 'объектов') })</p>
-                               <FormControlLabel
-                                 control={<Checkbox checked={analoguesChecked} onChange={onAnaloguesChange} />}
-                                 label="Выбрать все"
-                               />
-                             </div>
+                             <p>Выберите аналоги для пула</p>
+                             <p>(выбрано { pluralRus(addedAnalogues.length, 'объект', 'объекта', 'объектов') })</p>
+                             <FormControlLabel
+                               control={<Checkbox checked={analoguesChecked} onChange={onAnaloguesChange} />}
+                               label="Выбрать все"
+                               sx={{ width: '100%' }}
+                             />
+                             {addedAnalogues.length > 0 && (
+                               <Button onClick={() => onPool()} sx={{ padding: 0 }} variant="text">
+                                 Рассчитать пул
+                               </Button>
+                             )}
                              <div className="filter-menu" onClick={e => setAnaloguesEl(e.currentTarget)} />
                            </div>
                            <Menu
