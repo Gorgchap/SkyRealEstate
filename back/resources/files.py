@@ -1,5 +1,5 @@
 from sqlalchemy.ext.declarative import declarative_base
-from flask import make_response, jsonify, request, send_file
+from flask import make_response, jsonify, request, send_file, send_from_directory
 from flask_restful import Resource as ResFree
 from model import rs_files, rs_buildings, rs_flats, user
 import base64
@@ -163,7 +163,8 @@ class Download(ResFree):
 
         for row in rs:
             try:
-                return send_file(row['path'], attachment_filename=row['name'])
-            except Exception:
-                return make_response(jsonify({"error": "true", "message": "File not found"}), 401)
+                return send_file(row['path'], download_name=row['name'])
+                #return row['path']
+            except Exception as e:
+                return make_response(jsonify({"error": "true", "message": "File not found"+str(e)}), 401)
 
