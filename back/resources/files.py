@@ -9,6 +9,7 @@ import uuid
 from decimal import Decimal
 from yandex_geocoder import Client
 import os
+from random import randint
 
 ya_api_key = 'fcebe29e-908a-4101-9808-b634f1c025ad'
 
@@ -100,9 +101,19 @@ class Upload(ResFree):
                         sess.add(build)
                         sess.flush()
 
+                        #тут должен быть краулер или api на домклик или подобную систему
+                        if row['rooms'] == 1:
+                            price = randint(9500000, 14000000)
+                        elif row['rooms'] == 2:
+                            price = randint(23000000, 32000000)
+                        elif row['rooms'] == 3:
+                            price = randint(28000000, 42000000)
+                        else:
+                            price = randint(30000000, 500000000)
+
                         flats = rs_flats.Flat(bld_id=build.id, rooms=row['rooms'], floor=row['floor'],
                                               square=row['square'], kit_square=row['kit_square'], balkon=row['balkon'],
-                                              to_metro=row['to_metro'], condition=row['condition'], files_id=rsf.id)
+                                              to_metro=row['to_metro'], condition=row['condition'], files_id=rsf.id, price=price)
                         sess.add(flats)
                         sess.flush()
 

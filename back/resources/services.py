@@ -81,7 +81,7 @@ class Analogues(ResFree):
         dfb = pd.DataFrame(rs.fetchall())
 
         arr_rooms = [] #dfb['rooms'].unique()
-        arr_square = [] #dfb['square'].unique()
+        arr_address = [] #dfb['square'].unique()
         arr_segment = [] #dfb['segments'].unique()
         arr_distance = [] #dfb['to_metro'].unique()
         arr_material = [] #dfb['wall_mat'].unique()
@@ -90,6 +90,7 @@ class Analogues(ResFree):
         minsq = dfb['square'].min()
         for i, row in dfb.iterrows():
             arr_rooms.append(row['rooms'])
+            arr_address.append(row['address'])
             #arr_square.append(row['square'])
             arr_segment.append(row['segments'])
             arr_distance.append(row['to_metro'])
@@ -97,8 +98,8 @@ class Analogues(ResFree):
 
         #return str(arr_rooms) + ' ' + str(maxsq) + ' ' + str(minsq) + ' ' + str(arr_segment) + ' ' + str(arr_distance) + ' ' + str(arr_material)
 
-        sql = "select * from rs_benchmarks WHERE rooms in :arr_rooms and square <= :maxsq  and square >= :minsq and segments in :arr_segment and to_metro in :arr_distance and wall_mat in :arr_material"
-        rs = db_session().execute(sql, {'arr_rooms': arr_rooms, 'maxsq': maxsq, 'minsq': minsq, 'arr_segment': arr_segment, 'arr_distance': arr_distance, 'arr_material': arr_material})
+        sql = "select * from rs_benchmarks WHERE address not in :arr_address and rooms in :arr_rooms and square <= :maxsq  and square >= :minsq and segments in :arr_segment and to_metro in :arr_distance and wall_mat in :arr_material"
+        rs = db_session().execute(sql, {'arr_address': arr_address, 'arr_rooms': arr_rooms, 'maxsq': maxsq, 'minsq': minsq, 'arr_segment': arr_segment, 'arr_distance': arr_distance, 'arr_material': arr_material})
         df = pd.DataFrame(rs.fetchall())
 
         df_as_json = df.to_dict(orient='index')
