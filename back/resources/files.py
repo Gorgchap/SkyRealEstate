@@ -11,7 +11,7 @@ from yandex_geocoder import Client
 
 ya_api_key = 'fcebe29e-908a-4101-9808-b634f1c025ad'
 
-DIR_FILES = 'C:\\rs_files\\'
+DIR_FILES = '/var/www_back/files/'
 columns = ['address', 'rooms', 'segment', 'floors', 'wall_mat', 'floor', 'square', 'kit_square', 'balkon', 'to_metro',
            'condition']
 
