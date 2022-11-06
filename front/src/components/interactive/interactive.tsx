@@ -37,7 +37,7 @@ const features = [
   },
 ];
 
-const comparator = (a: ObjectInformation, b: ObjectInformation): number => a.id > b.id ? 1 : -1;
+const comparator = (a: ObjectInformation, b: ObjectInformation): number => a.bid - b.bid;
 const defaultCenter: [number, number] = [55.751999, 37.617734];
 
 export const Interactive = (): JSX.Element => {
@@ -88,7 +88,7 @@ export const Interactive = (): JSX.Element => {
   const getBenchmarks = async (): Promise<void> => {
     try {
       setBenchmarksLoading(true);
-      const data = await benchmarksPost({
+      const result = await benchmarksPost({
         address: address.trim(),
         distance,
         material: `${material}`,
@@ -96,7 +96,7 @@ export const Interactive = (): JSX.Element => {
         segment: `${segment}`,
         square,
       });
-      setBenchmarks(data);
+      setBenchmarks(result);
     } catch (e) {
       console.error(e);
       setBenchmarks([]);
@@ -121,7 +121,7 @@ export const Interactive = (): JSX.Element => {
       setAddedAnalogues([...analogues]);
       setAnaloguesChecked(true);
     } else {
-      setAddedAnalogues(value => type === 'push' ? value.concat(item).sort(comparator) : value.filter(e => e.id !== item.id));
+      setAddedAnalogues(value => type === 'push' ? value.concat(item).sort(comparator) : value.filter(e => e.bid !== item.bid));
     }
   };
 
@@ -136,7 +136,7 @@ export const Interactive = (): JSX.Element => {
       setAddedBenchmarks([...benchmarks]);
       setBenchmarksChecked(true);
     } else {
-      setAddedBenchmarks(value => type === 'push' ? value.concat(item).sort(comparator) : value.filter(e => e.id !== item.id));
+      setAddedBenchmarks(value => type === 'push' ? value.concat(item).sort(comparator) : value.filter(e => e.bid !== item.bid));
     }
   };
 
@@ -155,12 +155,6 @@ export const Interactive = (): JSX.Element => {
 
   useEffect(() => {
     getBenchmarks();
-    setTimeout(() => {
-      setAnalogues(Array.from({ length: 10 }, (_, index) => ({
-        id: '0'.repeat(3 - `${index + 1}`.length) + `${index + 1}`,
-        address: `Box ${index + 1}`,
-      })));
-    }, 2000);
   }, []);
 
   return (

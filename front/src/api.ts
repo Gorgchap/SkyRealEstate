@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import Cookies from 'js-cookie';
-import { Credentials, Filters, LoginInfo, LogoutInfo, UserFile, UserInfo } from '@src/models';
+import { Credentials, Filters, LoginInfo, LogoutInfo, ObjectInformation, UserFile, UserInfo } from '@src/models';
 
 interface ApiError {
   error: boolean;
@@ -65,10 +65,10 @@ export async function analoguesPost(ids: string[]): Promise<any> {
   }
 }
 
-export async function benchmarksPost(filters: Filters): Promise<any> {
+export async function benchmarksPost(filters: Filters): Promise<ObjectInformation[]> {
   try {
-    const { data } = await api.post('/benchmarks', filters);
-    return data;
+    const { data } = await api.post<Record<string, ObjectInformation>>('/benchmarks', filters);
+    return Object.values(data);
   } catch (e) {
     throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);
   }

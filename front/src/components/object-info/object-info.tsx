@@ -1,6 +1,7 @@
 import React, {MouseEvent, useEffect, useState} from 'react';
 import { Box, Chip, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import { ObjectInformation } from '@src/models';
+import { materialArray, pluralRus, segmentArray } from '@src/utils';
 import './object-info.less';
 
 interface Props {
@@ -10,7 +11,7 @@ interface Props {
   updateInfo: (type: string) => void;
 }
 
-export const ObjectInfo = ({ info, showChips = false, state, updateInfo }: Props): JSX.Element => {
+export const ObjectInfo = ({ info, showChips = true, state, updateInfo }: Props): JSX.Element => {
   const [value, setValue] = useState<string>('');
 
   const handleChange = (event: MouseEvent<HTMLElement>, newValue: string) => {
@@ -31,18 +32,21 @@ export const ObjectInfo = ({ info, showChips = false, state, updateInfo }: Props
         { info.address }
       </Typography>
       <Typography component="p" sx={{ color: '#afb5b8', fontSize: '0.875rem', fontWeight: 600, lineHeight: 1.2 }}>
-        ЖК «Символ» • 7 мин. от метро ул. Академика Янгеля
+        { info.to_metro } мин. от метро
       </Typography>
       <Typography component="p" sx={{ fontWeight: 700, lineHeight: 1.4 }}>
-        Студия • Современное жильё • 22 этажа • Панель
+        { info.rooms < 1 ? 'Студия' : pluralRus(info.rooms, 'комната', 'комнаты', 'комнат') } •
+        { segmentArray.find(s => s.value === info.segments)?.label ?? '–' } •
+        { pluralRus(info.floors, 'этаж', 'этажа', 'этажей') } •
+        { materialArray.find(s => s.value === info.wall_mat)?.label ?? '–' }
       </Typography>
       {showChips && (
         <Box sx={{ display: 'flex', flexFlow: 'row wrap', gap: 1 }}>
-          <Chip label={`7 этаж`} sx={{ backgroundColor: 'rgba(128, 202, 255, 0.2)' }}/>
-          <Chip label={`Площадь: 21.3 м²`} sx={{ backgroundColor: 'rgba(128, 202, 255, 0.2)' }}/>
-          <Chip label={`Кухня: 8.5 м²`} sx={{ backgroundColor: 'rgba(128, 202, 255, 0.2)' }}/>
-          <Chip label={`Балкон`} sx={{ backgroundColor: 'rgba(128, 202, 255, 0.2)' }}/>
-          <Chip label={`Муниципальный ремонт`} sx={{ backgroundColor: 'rgba(128, 202, 255, 0.2)' }}/>
+          <Chip label={`${info.floor} этаж`} sx={{ backgroundColor: 'rgba(128, 202, 255, 0.2)' }}/>
+          <Chip label={`Площадь: ${info.square} м²`} sx={{ backgroundColor: 'rgba(128, 202, 255, 0.2)' }}/>
+          <Chip label={`Кухня: ${info.kit_squa} м²`} sx={{ backgroundColor: 'rgba(128, 202, 255, 0.2)' }}/>
+          <Chip label={`Балкон/лоджия: ${info.balkon ? 'Да' : 'Нет'}`} sx={{ backgroundColor: 'rgba(128, 202, 255, 0.2)' }}/>
+          <Chip label={`${info.condition}`} sx={{ backgroundColor: 'rgba(128, 202, 255, 0.2)' }}/>
         </Box>
       )}
       <ToggleButtonGroup exclusive fullWidth onChange={handleChange} value={value}>
