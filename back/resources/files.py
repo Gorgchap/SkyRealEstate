@@ -105,8 +105,8 @@ class Upload(ResFree):
             return make_response(jsonify({"message": "Successful"}), 202)
         except KeyError:
             return make_response(jsonify({"error": "true", "message": "Invalid format json"}), 401)
-        except FileNotFoundError:
-            return make_response(jsonify({"error": "true", "message": "File not found or wrong extension"}), 401)
+        except FileNotFoundError as e:
+            return make_response(jsonify({"error": "true", "message": "File not found or wrong extension" + e}), 401)
     '''    
         else:
             return make_response(jsonify({"error": "true", "message": "File not found or wrong extension"}), 401)
