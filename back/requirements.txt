@@ -23,4 +23,3 @@ Scrapy
 selenium
 webdriver_manager
 yandex_geocoder
-base64
