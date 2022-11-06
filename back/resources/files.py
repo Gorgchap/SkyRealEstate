@@ -8,6 +8,7 @@ from api import db_session
 import uuid
 from decimal import Decimal
 from yandex_geocoder import Client
+import os
 
 ya_api_key = 'fcebe29e-908a-4101-9808-b634f1c025ad'
 
@@ -47,6 +48,9 @@ class Upload(ResFree):
                 datafile = base64.b64decode(result.split(',')[1])
 
                 name_uid = file_uid+'_'+name
+
+                if not os.path.isdir(DIR_FILES):
+                    os.mkdir(DIR_FILES)
 
                 with open(DIR_FILES+name_uid, 'wb') as f:
                     f.write(datafile)
