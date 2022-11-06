@@ -64,4 +64,15 @@ class Benchmarks(ResFree):
 
 class Analogues(ResFree):
     def post(self):
-        pass
+        jsonData = request.get_json()
+
+        idbuild = []
+        for row in jsonData:
+            idbuild.append(row)
+
+        sql = "select * from rs_benchmarks WHERE bid in :idbuild"
+        rs = db_session().execute(sql, {'idbuild': idbuild})
+        df = pd.DataFrame(rs.fetchall())
+
+        df_as_json = df.to_dict()
+        return jsonify(df_as_json)
