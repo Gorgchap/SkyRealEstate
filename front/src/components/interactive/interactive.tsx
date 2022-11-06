@@ -86,17 +86,16 @@ export const Interactive = (): JSX.Element => {
   };
 
   const getBenchmarks = async (): Promise<void> => {
-    const filters = Object.fromEntries(Object.entries({
-      address: address.trim(),
-      distance,
-      material: `${material}`,
-      rooms,
-      segment: `${segment}`,
-      square,
-    }).filter(([key, value]) => key === 'rooms' || value));
     try {
       setBenchmarksLoading(true);
-      const data = await benchmarksPost(filters);
+      const data = await benchmarksPost({
+        address: address.trim(),
+        distance,
+        material: `${material}`,
+        rooms,
+        segment: `${segment}`,
+        square,
+      });
       setBenchmarks(data);
     } catch (e) {
       console.error(e);
