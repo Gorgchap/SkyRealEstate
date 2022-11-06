@@ -137,14 +137,14 @@ class List(ResFree):
             rs = db_session().execute(sql, {'us_id': us.id})
             df = pd.DataFrame(rs.fetchall())
             df_as_json = df.to_dict()
-            return jsonify({'status': 'ok', 'json_data': df_as_json})
+            return jsonify(df_as_json)
 
         else:
             sql = "select id, name, date, size from rs_files where user_id = :us_id order by id desc"
             rs = db_session().execute(sql, {'us_id': us.id})
             df = pd.DataFrame(rs.fetchall())
             df_as_json = df.to_dict()
-            return jsonify({'status': 'ok', 'json_data': df_as_json})
+            return jsonify(df_as_json)
 
 class Download(ResFree):
     def post(self):
