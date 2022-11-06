@@ -56,6 +56,12 @@ class Benchmarks(ResFree):
 
         if qry != "":
             dfr = df.query(qry)
-            return dfr.to_json(orient='records')
+            df_as_json = dfr.to_dict()
+            return jsonify({'status': 'ok', 'json_data': df_as_json})
 
-        return df.to_json(orient='records')
+        df_as_json = df.to_dict()
+        return jsonify({'status': 'ok', 'json_data': df_as_json})
+
+class Analogues(ResFree):
+    def post(self):
+        pass
