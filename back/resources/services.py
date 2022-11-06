@@ -18,6 +18,9 @@ class Benchmarks(ResFree):
         for row in rs:
             idfiles.append(row['id'])
 
+        if len(idfiles) == 0:
+            return jsonify("")
+
         sql = "select * from rs_benchmarks WHERE files_id in :idfiles"
         rs = db_session().execute(sql, {'idfiles': idfiles})
         df = pd.DataFrame(rs.fetchall())
@@ -75,6 +78,18 @@ class Analogues(ResFree):
         df = pd.DataFrame(rs.fetchall())
 
         arr_rooms = []
+        arr_square = []
+        arr_segment = []
+        arr_distance = []
+        arr_material = []
+
+        for i, row in df.iterrows():
+            arr_rooms.append(row['square'])
+            arr_square.append(row['rooms'])
+            arr_segment.append(row['segment'])
+            arr_distance.append(row['to_metro'])
+            arr_material.append(row['wall_mat'])
+
 
         df_as_json = df.to_dict(orient='index')
         return jsonify(df_as_json)
