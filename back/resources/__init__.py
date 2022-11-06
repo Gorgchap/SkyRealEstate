@@ -20,4 +20,5 @@ RestApi.add_resource(files.List, '/list')
 RestApi.add_resource(files.Download, '/download')
 RestApi.add_resource(services.Benchmarks, '/benchmarks')
 RestApi.add_resource(services.Analogues, '/analogues')
+RestApi.add_resource(services.Pool, '/pool')
 #get post

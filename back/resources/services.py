@@ -80,24 +80,30 @@ class Analogues(ResFree):
         rs = db_session().execute(sql, {'idbuild': idbuild})
         dfb = pd.DataFrame(rs.fetchall())
 
-        arr_rooms = dfb['rooms'].unique()
-        arr_square = dfb['square'].unique()
-        arr_segment = dfb['segment'].unique()
-        arr_distance = dfb['to_metro'].unique()
-        arr_material = dfb['wall_mat'].unique()
+        arr_rooms = [] #dfb['rooms'].unique()
+        arr_square = [] #dfb['square'].unique()
+        arr_segment = [] #dfb['segments'].unique()
+        arr_distance = [] #dfb['to_metro'].unique()
+        arr_material = [] #dfb['wall_mat'].unique()
 
-        '''
-        for i, row in df.iterrows():
-            arr_rooms.append(row['square'])
-            arr_square.append(row['rooms'])
-            arr_segment.append(row['segment'])
+        maxsq = dfb['square'].max()
+        minsq = dfb['square'].min()
+        for i, row in dfb.iterrows():
+            arr_rooms.append(row['rooms'])
+            #arr_square.append(row['square'])
+            arr_segment.append(row['segments'])
             arr_distance.append(row['to_metro'])
             arr_material.append(row['wall_mat'])
-        '''
 
-        sql = "select * from rs_benchmarks WHERE rooms in :arr_rooms and square in :arr_square and segment in :arr_segment and to_metro in :arr_distance and wall_mat in :arr_material"
-        rs = db_session().execute(sql, {'arr_rooms': arr_rooms, 'arr_square': arr_square, 'arr_segment': arr_segment, 'arr_distance': arr_distance, 'arr_material': arr_material})
+        #return str(arr_rooms) + ' ' + str(maxsq) + ' ' + str(minsq) + ' ' + str(arr_segment) + ' ' + str(arr_distance) + ' ' + str(arr_material)
+
+        sql = "select * from rs_benchmarks WHERE rooms in :arr_rooms and square <= :maxsq  and square >= :minsq and segments in :arr_segment and to_metro in :arr_distance and wall_mat in :arr_material"
+        rs = db_session().execute(sql, {'arr_rooms': arr_rooms, 'maxsq': maxsq, 'minsq': minsq, 'arr_segment': arr_segment, 'arr_distance': arr_distance, 'arr_material': arr_material})
         df = pd.DataFrame(rs.fetchall())
 
         df_as_json = df.to_dict(orient='index')
         return jsonify(df_as_json)
+
+class Pool(ResFree):
+    def post(self):
+        pass
