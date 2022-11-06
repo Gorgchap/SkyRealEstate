@@ -102,6 +102,7 @@ class Upload(ResFree):
                         sess.flush()
 
                         #тут должен быть краулер или api на домклик или подобную систему
+                        #краулер добавим в продакшен версию
                         if row['rooms'] == 1:
                             price = randint(9500000, 14000000)
                         elif row['rooms'] == 2:
