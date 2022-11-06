@@ -12,6 +12,7 @@ from yandex_geocoder import Client
 ya_api_key = 'fcebe29e-908a-4101-9808-b634f1c025ad'
 
 DIR_FILES = '/var/www_back/files/'
+#DIR_FILES = 'C:\\rs_files\\'
 columns = ['address', 'rooms', 'segment', 'floors', 'wall_mat', 'floor', 'square', 'kit_square', 'balkon', 'to_metro',
            'condition']
 
@@ -42,12 +43,13 @@ class Upload(ResFree):
                 result = fileData['result']
                 size = fileData['size']
 
-                datafile = base64.decode(result)
+
+                datafile = base64.b64decode(result.split(',')[1])
 
                 name_uid = file_uid+'_'+name
 
-                with open(DIR_FILES+name_uid, 'wr') as file:
-                    file.write(datafile)
+                with open(DIR_FILES+name_uid, 'wb') as f:
+                    f.write(datafile)
                     rsf = rs_files.Files(name=name, path=DIR_FILES+name_uid, date=date, size=size, type="in",
                                          user_id=us.user_id)
 
@@ -75,18 +77,19 @@ class Upload(ResFree):
                     if colwal > 3:
                         return make_response(jsonify({"error": "true", "message": "Invalid format xlsx"}), 401)
 
-                    lat = 0
-                    lon = 0
-                    try:
-                        client = Client(ya_api_key)
-                        lon, lat = client.coordinates("Россия " + row['address'])
-                        lon = Decimal(lon)
-                        lat = Decimal(lat)
-
-                    except:
-                        pass
-
                     for i, row in df.iterrows():
+                        lat = 0
+                        lon = 0
+
+                        try:
+                            client = Client(ya_api_key)
+                            lon, lat = client.coordinates("Россия " + row['address'])
+                            lon = Decimal(lon)
+                            lat = Decimal(lat)
+
+                        except:
+                            pass
+
                         build = rs_buildings.Building(address=row['address'], wall_mat=row['wall_mat'],
                                                       segment=row['segment'], floors=row['floors'], files_id=rsf.id,
                                                       lat=lat, lon=lon)

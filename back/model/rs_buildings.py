@@ -18,7 +18,7 @@ class Building(Base):
     lon = Column(DECIMAL)
 
     def __init__(self, kladr_code="", reg_id="", address="", wall_mat="", segment="", floors="", files_id="",
-                 lat=0.0, lon=0.0):
+                 lat="", lon=""):
         self.kladr_code = kladr_code
         self.reg_id = reg_id
         self.address = address
