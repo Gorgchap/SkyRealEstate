@@ -10,6 +10,7 @@ export interface ObjectInformation {
   kit_squa: number;
   lat: string;
   lon: string;
+  price?: number;
   rooms: number;
   segments: string;
   square: number;

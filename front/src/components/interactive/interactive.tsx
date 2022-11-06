@@ -4,7 +4,7 @@ import {
   Box, Button, Checkbox, Chip, CircularProgress, Grid, FormControlLabel, Menu, MenuItem, Tab, Tabs, TextField,
 } from '@mui/material';
 import { Clusterer, Map, Placemark, YMaps } from '@pbe/react-yandex-maps';
-import {analoguesPost, benchmarksPost} from '@src/api';
+import { analoguesPost, benchmarksPost } from '@src/api';
 import { ObjectInfo } from '@src/components';
 import { ObjectInformation } from '@src/models';
 import { distanceArray, materialArray, pluralRus, roomsArray, segmentArray } from '@src/utils';
@@ -18,14 +18,12 @@ const getMarker = (coordinates: [number, number], prices?: number[]): any => {
       balloonCloseButton: false,
       balloonOffset: [0, -20],
       hideIconOnBalloonOpen: false,
-      preset: 'islands#' + prices ? 'darkGreenStretchyIcon' : 'blueStretchyIcon',
+      preset: prices ? 'islands#darkGreenStretchyIcon' : 'islands#blueStretchyIcon',
     },
     properties: {
-      balloonContent: prices ? prices.join('<br>') : '',
-      hintContent: prices
-        ? 'Нажмите на точку для показа или скрытия подсказки'
-        : 'Здесь находятся эталонные объекты',
-      iconContent: prices ? `${prices.length > 1 ? `<b>${prices.length}</b> – ` : ''}от ${Math.min(...prices)}` : '',
+      balloonContent: prices?.map(e => Math.round(e / 1000000) + ' млн руб').join('<br>') ?? '',
+      hintContent: prices ? 'Здесь находится объекты-аналоги' : 'Здесь находятся эталонные объекты',
+      // iconContent: prices ? `${prices.length > 1 ? `<b>${prices.length}</b> – ` : ''}от ${Math.min(...prices)}` : '',
     },
   }
 };
@@ -70,6 +68,9 @@ export const Interactive = (): JSX.Element => {
       setAnaloguesChecked(true);
       setAnaloguesState('push');
       setActiveTab(1);
+      const [first] = feat;
+      const markers = data.map(e => getMarker([+e.lat, +e.lon], [e.price]));
+      setFeat([first, ...markers]);
     } catch (e) {
       console.error(e);
       setAddedAnalogues([]);
@@ -141,9 +142,9 @@ export const Interactive = (): JSX.Element => {
     }
   };
 
-  const onPool = (): void => {
-    navigate('/pool');
-  };
+  // const onPool = (): void => {
+  //   navigate('/pool');
+  // };
 
   const resetBenchmarkFilters = (): void => {
     setAddress('');
@@ -344,7 +345,7 @@ export const Interactive = (): JSX.Element => {
                                sx={{ width: '100%' }}
                              />
                              {addedAnalogues.length > 0 && (
-                               <Button onClick={() => onPool()} sx={{ padding: 0 }} variant="text">
+                               <Button sx={{ padding: 0 }} variant="text">
                                  Рассчитать пул
                                </Button>
                              )}
@@ -460,16 +461,14 @@ export const Interactive = (): JSX.Element => {
             modules={['control.ZoomControl', 'geoObject.addon.balloon', 'geoObject.addon.hint']}
             state={{ center, controls: ['zoomControl'], zoom }}
           >
-            <Clusterer options={{ preset: 'islands#invertedVioletClusterIcons' }}>
-              {feat.map((items) => (
-                <Placemark
-                  key={items.id}
-                  geometry={items.geometry}
-                  options={items.options}
-                  properties={items.properties}
-                />
-              ))}
-            </Clusterer>
+            {feat.map((items) => (
+              <Placemark
+                key={items.id}
+                geometry={items.geometry}
+                options={items.options}
+                properties={items.properties}
+              />
+            ))}
           </Map>
         </YMaps>
       </Grid>

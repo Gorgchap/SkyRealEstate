@@ -56,10 +56,10 @@ export async function logout(): Promise<LogoutInfo> {
   }
 }
 
-export async function analoguesPost(ids: number[]): Promise<any> {
+export async function analoguesPost(ids: number[]): Promise<ObjectInformation[]> {
   try {
-    const { data } = await api.post('/analogues', ids);
-    return data;
+    const { data } = await api.post<Record<string, ObjectInformation>>('/analogues', ids);
+    return Object.values(data);
   } catch (e) {
     throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);
   }
