@@ -56,10 +56,10 @@ class Benchmarks(ResFree):
 
         if qry != "":
             dfr = df.query(qry)
-            df_as_json = dfr.to_dict()
+            df_as_json = dfr.to_dict(orient='index')
             return jsonify(df_as_json)
 
-        df_as_json = df.to_dict()
+        df_as_json = df.to_dict(orient='index')
         return jsonify(df_as_json)
 
 class Analogues(ResFree):
@@ -70,9 +70,9 @@ class Analogues(ResFree):
         for row in jsonData:
             idbuild.append(row)
 
-        sql = "select * from rs_benchmarks WHERE bid in :idbuild"
+        sql = "select lat, lon from rs_benchmarks WHERE bid in :idbuild"
         rs = db_session().execute(sql, {'idbuild': idbuild})
         df = pd.DataFrame(rs.fetchall())
 
-        df_as_json = df.to_dict()
+        df_as_json = df.to_dict(orient='index')
         return jsonify(df_as_json)
