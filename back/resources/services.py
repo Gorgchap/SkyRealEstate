@@ -24,15 +24,15 @@ class Benchmarks(ResFree):
 
         qry = ""
 
-        dadress = jsonData['adress']
+        daddress = jsonData['address']
         dsquare = jsonData['square']
         drooms = jsonData['rooms']
         dsegment = jsonData['segment']
         ddistance = jsonData['distance']
         dmaterial = jsonData['material']
 
-        if dadress != "":
-            qry = qry + "adress == " + dadress
+        if daddress != "":
+            qry = qry + "address == " + daddress
 
         if dsquare != 0:
             if qry != "": qry = qry+" and "
